@@ -1,6 +1,5 @@
 package com.cps15;
 
-import com.sun.istack.internal.Nullable;
 import org.gephi.graph.api.GraphController;
 import org.gephi.graph.api.GraphModel;
 import org.gephi.io.exporter.api.ExportController;
@@ -101,7 +100,6 @@ public class LayoutEngine {
         return true;
     }
 
-    @Nullable
     private Layout getLayout(LayoutAlgorithm layoutAlgorithm) {
         switch (layoutAlgorithm) {
             case FORCEATLAS2:

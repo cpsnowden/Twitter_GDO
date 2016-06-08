@@ -15,12 +15,12 @@ import java.util.logging.Logger;
 class GraphManager {
 
     private static final Logger logger = Logger.getLogger(GraphManager.class.getName());
-    private DatabaseManager dbm;
+    private DatabaseReader dbm;
     private ProjectController pc;
 
     public GraphManager(String databaseName) {
 
-        dbm = new DatabaseManager(databaseName);
+        dbm = new DatabaseReader(databaseName);
         pc = Lookup.getDefault().lookup(ProjectController.class);
         pc.newProject();
     }
