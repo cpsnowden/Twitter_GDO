@@ -8,6 +8,10 @@ public class App
 {
     public static void main( String[] args )
     {
-        System.out.println( "Hello World!" );
+        GraphManager gm = new GraphManager("Twitter");
+//        System.out.println(gm.getRetweetGraph("InOrOut_Stream", LayoutEngine.LayoutAlgorithm.YIFANHU, 60));
+        System.out.println(gm.getRetweetGraph("Brexit_Stream", LayoutEngine.LayoutAlgorithm.YIFANHU, 180));
+        gm.shutdown();
+
     }
 }
