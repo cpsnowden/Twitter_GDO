@@ -1,4 +1,4 @@
-package com.cps15;
+package com.cps15.AnalyticsService.Graph;
 
 import org.gephi.graph.api.GraphController;
 import org.gephi.graph.api.GraphModel;
@@ -11,16 +11,16 @@ import java.util.logging.Logger;
 
 /**
  * Twitter_GDO
- * Created by chris on 08/06/2016.
+ * Created by chris on 09/06/2016.
  */
-public class GraphConstructor {
+public class GraphCreator {
 
-    public static final Logger logger = Logger.getLogger(GraphConstructor.class.getName());
+
+    public static final Logger logger = Logger.getLogger(GraphCreator.class.getName());
     private Container container;
     private ContainerLoader containerLoader;
 
-
-    public GraphConstructor() {
+    public GraphCreator() {
         this.container = Lookup.getDefault().lookup(Container.Factory.class).newContainer();
         this.containerLoader = container.getLoader();
     }
@@ -43,7 +43,6 @@ public class GraphConstructor {
 
 
     public void addEdge(String source, String target) {
-
 
         if (!containerLoader.edgeExists(source, target)) {
 
@@ -77,7 +76,7 @@ public class GraphConstructor {
 
         ImportController importController = Lookup.getDefault().lookup(ImportController.class);
         importController.process(container, new DefaultProcessor(), workspace);
-        return Lookup.getDefault().lookup(GraphController.class).getGraphModel(workspace);
 
+        return Lookup.getDefault().lookup(GraphController.class).getGraphModel(workspace);
     }
 }
