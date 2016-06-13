@@ -33,6 +33,8 @@ public class GraphLayout {
 
     public boolean runLayout(long duration, LayoutAlgorithm layoutAlgorithm) {
 
+
+        logger.info("Starting Layout");
         AutoLayout autoLayout = new AutoLayout(duration, TimeUnit.SECONDS);
         autoLayout.setGraphModel(graphModel);
 

@@ -17,10 +17,16 @@ public abstract class DatabaseManager {
     private static final Logger logger = Logger.getLogger(DatabaseManager.class.getName());
     protected MongoClient mongoClient;
     protected MongoDatabase db;
+    private static final String localhost = "localhost";
+    private static final int port = 27017;
 
-    public DatabaseManager(String database) {
+    private static final String remoteHost = "146.169.45.131";
+    
 
-        this.mongoClient = new MongoClient("localhost", 27017);
+
+    public DatabaseManager(String database, boolean remote) {
+
+        this.mongoClient = new MongoClient(remote?remoteHost:localhost, port);
         this.db = mongoClient.getDatabase(database);
     }
 

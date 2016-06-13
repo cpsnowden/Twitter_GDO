@@ -30,9 +30,9 @@ public class GraphManager implements Closeable {
 
 
 
-    public GraphManager(String databaseName) {
+    public GraphManager(String databaseName, boolean remote) {
 
-        dbm = new DatabaseReader(databaseName);
+        dbm = new DatabaseReader(databaseName, remote);
         pc = Lookup.getDefault().lookup(ProjectController.class);
         pc.newProject();
         workspace = pc.getCurrentWorkspace();
@@ -41,7 +41,9 @@ public class GraphManager implements Closeable {
 
     public String getRetweetGraph(String collectionName) {
 
+        logger.info("Getting graph");
         GraphModel graphModel = dbm.getGraph(collectionName, workspace, new RetweetFunction());
+        logger.info("Got graph");
         GraphLayout graphLayout = new GraphLayout(graphModel);
         graphLayout.runLayout(300, GraphLayout.LayoutAlgorithm.YIFANHU);
 

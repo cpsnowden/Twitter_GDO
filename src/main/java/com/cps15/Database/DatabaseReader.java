@@ -29,17 +29,12 @@ import static com.mongodb.client.model.Projections.include;
  * Created by chris on 08/06/2016.
  */
 
-public class DatabaseReader {
+public class DatabaseReader extends DatabaseManager{
 
     private static final Logger logger = Logger.getLogger(DatabaseReader.class.getName());
-    private MongoClient mongoClient;
-    private MongoDatabase db;
 
-    public DatabaseReader(String database) {
-
-        this.mongoClient = new MongoClient("localhost", 27017);
-        this.db = mongoClient.getDatabase(database);
-
+    public DatabaseReader(String database, boolean remote) {
+        super(database, remote);
     }
 
     public GraphModel getGraph(String collectionName, Workspace workspace, IDocumentFunction documentFunction) {

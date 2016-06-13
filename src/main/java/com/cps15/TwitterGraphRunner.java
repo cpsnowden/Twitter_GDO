@@ -10,8 +10,8 @@ public class TwitterGraphRunner
 {
     public static void main( String[] args )
     {
-        GraphManager graphManager = new GraphManager("Twitter");
-        System.out.println(graphManager.getRetweetGraph("Brexit_Stream"));
+        GraphManager graphManager = new GraphManager("Twitter", false);
+        System.out.println(graphManager.getRetweetGraph("BBC"));
     }
 
 }

@@ -19,8 +19,8 @@ public class DatabaseWriter extends DatabaseManager {
     private MongoCollection<Document> collection;
 
 
-    public DatabaseWriter(String database, String collectionName) {
-        super(database);
+    public DatabaseWriter(String database, String collectionName, boolean remote) {
+        super(database, remote);
         this.collection = this.db.getCollection(collectionName);
     }
 

@@ -23,7 +23,7 @@ public abstract class TwitterCollector {
         this.ConsumerSecret = ConsumerSecret;
         this.AccessToken = AccessToken;
         this.AccessTokenSecret = AccessTokenSecret;
-        this.dbw = new DatabaseWriter(databaseName, collectionName);
+        this.dbw = new DatabaseWriter(databaseName, collectionName, false);
     }
 
     protected ConfigurationBuilder getBaseConfigurationBuilder() {
