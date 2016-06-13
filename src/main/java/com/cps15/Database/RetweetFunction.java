@@ -14,21 +14,24 @@ import java.util.stream.Stream;
  */
 public class RetweetFunction implements IDocumentFunction {
 
+
     private List<String> keys = Arrays.asList("user.id_str",
             "retweeted_status.user.id_str",
             "user.screen_name",
-            "retweeted_status.user.screen_name");
+            "retweeted_status.user.screen_name",
+            "text");
 
     @Override
     public GraphCreator getGraphCreator(Stream<Document> documentStream) {
 
         GraphCreator gc = new GraphCreator();
+
         documentStream.forEach(document -> {
             List<Object> values = getValues(keys, document);
 
             gc.addNode(values.get(0).toString(), values.get(2).toString());
             gc.addNode(values.get(1).toString(), values.get(3).toString());
-            gc.addEdge(values.get(0).toString(), values.get(1).toString());
+            gc.addEdge(values.get(0).toString(), values.get(1).toString(),values.get(4).toString());
 
         });
 
