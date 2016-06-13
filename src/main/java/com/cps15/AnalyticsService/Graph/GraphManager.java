@@ -2,7 +2,6 @@ package com.cps15.AnalyticsService.Graph;
 
 import com.cps15.Database.DatabaseReader;
 import com.cps15.Database.RetweetFunction;
-import com.sun.xml.internal.ws.Closeable;
 import org.apache.commons.io.FilenameUtils;
 import org.gephi.graph.api.GraphModel;
 import org.gephi.io.exporter.api.ExportController;
@@ -21,7 +20,7 @@ import java.util.logging.Logger;
  * Twitter_GDO
  * Created by chris on 09/06/2016.
  */
-public class GraphManager implements Closeable {
+public class GraphManager {
 
     private static final Logger logger = Logger.getLogger(GraphManager.class.getName());
     private DatabaseReader dbm;
@@ -51,7 +50,6 @@ public class GraphManager implements Closeable {
 
     }
 
-    @Override
     public void close() {
         this.pc.closeCurrentProject();
     }

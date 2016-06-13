@@ -12,6 +12,7 @@ public class TwitterGraphRunner
     {
         GraphManager graphManager = new GraphManager("Twitter", false);
         System.out.println(graphManager.getRetweetGraph("BBC"));
+        graphManager.close();
     }
 
 }
