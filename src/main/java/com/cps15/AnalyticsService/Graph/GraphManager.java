@@ -38,10 +38,10 @@ public class GraphManager {
 
     }
 
-    public String getRetweetGraph(String collectionName) {
+    public String getRetweetGraph(String collectionName, int maxNumber) {
 
         logger.info("Getting graph");
-        GraphModel graphModel = dbm.getGraph(collectionName, workspace, new RetweetFunction());
+        GraphModel graphModel = dbm.getGraph(collectionName, workspace, new RetweetFunction(), maxNumber);
         logger.info("Got graph");
         GraphLayout graphLayout = new GraphLayout(graphModel);
         graphLayout.runLayout(300, GraphLayout.LayoutAlgorithm.YIFANHU);

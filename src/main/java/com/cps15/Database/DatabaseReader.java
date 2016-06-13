@@ -37,12 +37,12 @@ public class DatabaseReader extends DatabaseManager{
         super(database, remote);
     }
 
-    public GraphModel getGraph(String collectionName, Workspace workspace, IDocumentFunction documentFunction) {
+    public GraphModel getGraph(String collectionName, Workspace workspace, IDocumentFunction documentFunction, int maxNumber) {
 
         MongoCollection<Document> collection = db.getCollection(collectionName);
         Bson query = and(documentFunction.getKeys().stream().map(Filters::exists).collect(Collectors.toList()));
         Bson projection = fields(include(documentFunction.getKeys()), excludeId());
-        Stream<Document> documentStream = StreamSupport.stream(collection.find(query).projection(projection).spliterator(), false);
+        Stream<Document> documentStream = StreamSupport.stream(collection.find(query).limit(maxNumber).projection(projection).spliterator(), false);
 
         return documentFunction.getGraphCreator(documentStream).getGraphModel(workspace);
     }
