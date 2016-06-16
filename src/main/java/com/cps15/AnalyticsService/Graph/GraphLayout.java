@@ -1,14 +1,19 @@
 package com.cps15.AnalyticsService.Graph;
 
+import org.gephi.filters.api.FilterController;
+import org.gephi.filters.plugin.graph.GiantComponentBuilder;
 import org.gephi.graph.api.GraphModel;
 import org.gephi.layout.plugin.AutoLayout;
 import org.gephi.layout.plugin.force.StepDisplacement;
 import org.gephi.layout.plugin.force.yifanHu.YifanHuLayout;
 import org.gephi.layout.plugin.forceAtlas.ForceAtlasLayout;
+import org.gephi.layout.plugin.forceAtlas2.ForceAtlas2;
 import org.gephi.layout.spi.Layout;
 import org.gephi.project.api.Workspace;
+import org.openide.util.Lookup;
 
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Filter;
 import java.util.logging.Logger;
 
 /**
@@ -31,6 +36,8 @@ public class GraphLayout {
     }
 
 
+
+
     public boolean runLayout(long duration, LayoutAlgorithm layoutAlgorithm) {
 
 
@@ -47,7 +54,6 @@ public class GraphLayout {
         System.out.println(graphModel.getDirectedGraph().getNodeCount());
         autoLayout.addLayout(layout, 1.0f);
         autoLayout.execute();
-
         logger.info("Finished running graph layout on " + graphModel);
 
         return true;
@@ -56,7 +62,9 @@ public class GraphLayout {
     private Layout getLayout(LayoutAlgorithm layoutAlgorithm) {
         switch (layoutAlgorithm) {
             case FORCEATLAS2:
-                return new ForceAtlasLayout(null);
+                ForceAtlas2 forceAtlas2 = new ForceAtlas2(null);
+                return forceAtlas2;
+
             case YIFANHU:
                 YifanHuLayout yifanHu =new YifanHuLayout(null, new StepDisplacement(1f));
                 yifanHu.setOptimalDistance(100.0f);

@@ -116,5 +116,7 @@
     <orderEntry type="library" name="Maven: org.twitter4j:twitter4j-core:4.0.4" level="project" />
     <orderEntry type="library" name="Maven: org.twitter4j:twitter4j-stream:4.0.4" level="project" />
     <orderEntry type="library" name="Maven: org.twitter4j:twitter4j-async:4.0.4" level="project" />
+    <orderEntry type="library" name="Maven: de.julielab:aliasi-lingpipe:4.1.0" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.12" level="project" />
   </component>
 </module>

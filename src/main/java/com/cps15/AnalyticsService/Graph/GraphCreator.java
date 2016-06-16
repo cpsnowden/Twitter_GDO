@@ -70,11 +70,9 @@ public class GraphCreator {
         EdgeDraft edge = containerLoader.factory().newEdgeDraft();
         edge.setSource(sourceNode);
         edge.setTarget(targetNode);
-        System.out.println(edge);
         if (null != label) {
             edge.setLabel(label);
         }
-
 
         containerLoader.addEdge(edge);
 
