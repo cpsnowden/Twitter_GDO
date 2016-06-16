@@ -21,7 +21,9 @@ public class SentimentParser {
     public SentimentParser(String trainingPath) {
 
         try {
-            cls = (LMClassifier) AbstractExternalizable.readObject(new File(trainingPath));
+            ClassLoader classLoader = getClass().getClassLoader();
+            File file = new File(classLoader.getResource(trainingPath).getFile());
+            cls = (LMClassifier) AbstractExternalizable.readObject(file);
             String[] categories = cls.categories();
 
         } catch (IOException | ClassNotFoundException e) {
