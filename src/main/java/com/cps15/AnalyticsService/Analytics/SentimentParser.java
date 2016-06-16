@@ -3,9 +3,11 @@ package com.cps15.AnalyticsService.Analytics;
 import com.aliasi.classify.ConditionalClassification;
 import com.aliasi.classify.LMClassifier;
 import com.aliasi.util.AbstractExternalizable;
+import com.cps15.AnalyticsService.Graph.GraphLayout;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Logger;
 
 /**
  * Twitter_GDO
@@ -14,7 +16,7 @@ import java.io.IOException;
 public class SentimentParser {
 
     private LMClassifier cls;
-
+    private static final Logger logger = Logger.getLogger(SentimentParser.class.getName());
 
     public SentimentParser(String trainingPath) {
 
@@ -25,6 +27,7 @@ public class SentimentParser {
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
+        logger.info("Trained");
     }
 
     private String getSentimentClass(String subject) {
