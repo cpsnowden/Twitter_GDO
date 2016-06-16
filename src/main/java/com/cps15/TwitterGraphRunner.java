@@ -11,7 +11,7 @@ public class TwitterGraphRunner
     public static void main( String[] args )
     {
         GraphManager graphManager = new GraphManager("Twitter", false);
-        System.out.println(graphManager.getRetweetGraph("Trump_Clinton",100000,500));
+        System.out.println(graphManager.getRetweetGraph("Trump_Clinton",10,1));
         graphManager.close();
     }
 
