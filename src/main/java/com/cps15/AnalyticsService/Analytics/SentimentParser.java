@@ -7,6 +7,8 @@ import com.cps15.AnalyticsService.Graph.GraphLayout;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.logging.Logger;
 
 /**
@@ -22,12 +24,19 @@ public class SentimentParser {
 
         try {
             ClassLoader classLoader = getClass().getClassLoader();
-            File file = new File(classLoader.getResource(trainingPath).getFile());
+            URL url = classLoader.getResource(trainingPath);
+
+            File file = new File(url.toURI());
+            System.out.println(file.getAbsolutePath());
             cls = (LMClassifier) AbstractExternalizable.readObject(file);
             String[] categories = cls.categories();
 
-        } catch (IOException | ClassNotFoundException e) {
+            for(int i = 0; i < categories.length; ++i) {
+                System.out.println(categories[i]);
+            }
+        } catch (IOException | ClassNotFoundException | URISyntaxException e) {
             e.printStackTrace();
+            return;
         }
         logger.info("Trained");
     }

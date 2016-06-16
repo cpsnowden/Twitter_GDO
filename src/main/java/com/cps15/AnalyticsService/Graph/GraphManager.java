@@ -110,6 +110,7 @@ public class GraphManager {
                 logger.severe("Invalid format for exporter");
                 return "";
         }
+
     }
 
     public enum GraphFormat {
