@@ -29,7 +29,7 @@ public class TwitterRestCollector extends TwitterCollector {
 
 
         public TwitterRestCollector(String databaseName, String collectionName, List<String> trackTerms, String[] auth){
-            super(auth[0], auth[1], auth[2], auth[3], databaseName, collectionName);
+            super(auth[0], auth[1], auth[2], auth[3], databaseName);
 
             this.trackTerms = trackTerms;
             twitter = new TwitterFactory(getBaseConfigurationBuilder().build()).getInstance();

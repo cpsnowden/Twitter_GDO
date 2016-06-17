@@ -91,11 +91,11 @@ public class GraphManager {
 
         enrichGraph(graphModel);
 
-
         return exportTo(GraphFormat.GRAPHML, FilenameUtils.removeExtension(collectionName));
     }
 
     public void close() {
+        this.pc.closeCurrentWorkspace();
         this.pc.closeCurrentProject();
     }
 

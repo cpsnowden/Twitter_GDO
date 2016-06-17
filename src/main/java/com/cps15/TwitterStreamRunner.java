@@ -1,7 +1,11 @@
 package com.cps15;
 
+import com.cps15.DataService.StreamStopper.CounterStopper;
+import com.cps15.DataService.StreamStopper.IStreamStopper;
+import com.cps15.DataService.StreamStopper.TimeDurationStopper;
 import com.cps15.DataService.TwitterStreamCollector;
 
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
 
@@ -20,11 +24,16 @@ public class TwitterStreamRunner {
                 "74E59bkWxpa44TF8ZbAmX81Rt2ArlvR2ziWNUnrhQLuiY"
         };
 
-        List<String> trackTerms = Arrays.asList("JeremyCorbyn","jeremycorbyn");
-        String collectionName = "Corbin";
+        List<String> trackTerms = Arrays.asList("makeamericagreatagain","imwithher","feelthebern");
+        String collectionName = "USElections";
 
-        TwitterStreamCollector twitterStreamCollector = new TwitterStreamCollector("Twitter", collectionName, trackTerms, auth);
-        twitterStreamCollector.startCollection();
+        IStreamStopper c_stopper = new CounterStopper(5);
+        IStreamStopper d_stopper = new TimeDurationStopper(Duration.ofDays(1));
+
+        TwitterStreamCollector tsc = new TwitterStreamCollector("Twitter", trackTerms, auth, collectionName, d_stopper);
+        Thread collector = new Thread(tsc);
+        collector.start();
+
     }
 
 }

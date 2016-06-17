@@ -8,6 +8,7 @@ import org.gephi.layout.plugin.force.StepDisplacement;
 import org.gephi.layout.plugin.force.yifanHu.YifanHuLayout;
 import org.gephi.layout.plugin.forceAtlas.ForceAtlasLayout;
 import org.gephi.layout.plugin.forceAtlas2.ForceAtlas2;
+import org.gephi.layout.plugin.forceAtlas2.ForceAtlas2Builder;
 import org.gephi.layout.spi.Layout;
 import org.gephi.project.api.Workspace;
 import org.openide.util.Lookup;
@@ -63,8 +64,8 @@ public class GraphLayout {
         switch (layoutAlgorithm) {
             case FORCEATLAS2:
                 ForceAtlas2 forceAtlas2 = new ForceAtlas2(null);
+                System.out.println(forceAtlas2.getThreadsCount());
                 return forceAtlas2;
-
             case YIFANHU:
                 YifanHuLayout yifanHu =new YifanHuLayout(null, new StepDisplacement(1f));
                 yifanHu.setOptimalDistance(100.0f);

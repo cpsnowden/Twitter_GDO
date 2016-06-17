@@ -8,5 +8,6 @@ public interface StreamCollector {
 
     void startCollection();
     void stopCollection();
+    void reportError();
 
 }

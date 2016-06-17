@@ -24,9 +24,7 @@ public class SentimentParser {
 
         try {
             ClassLoader classLoader = getClass().getClassLoader();
-            URL url = classLoader.getResource(trainingPath);
-
-            File file = new File(url.toURI());
+            File file = new File(classLoader.getResource(trainingPath).getFile());
             System.out.println(file.getAbsolutePath());
             cls = (LMClassifier) AbstractExternalizable.readObject(file);
             String[] categories = cls.categories();
@@ -34,7 +32,7 @@ public class SentimentParser {
             for(int i = 0; i < categories.length; ++i) {
                 System.out.println(categories[i]);
             }
-        } catch (IOException | ClassNotFoundException | URISyntaxException e) {
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
             return;
         }
