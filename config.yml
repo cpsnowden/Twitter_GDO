@@ -1,7 +1,7 @@
 version: 0.0.1
 mongohost: localhost
 mongoport: 27017
-mongodb: Twitterv2
+mongodb: Administration
 requestCollection: Requests
 streamCollection: Streams
 

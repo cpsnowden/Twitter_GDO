@@ -40,7 +40,7 @@ public abstract class TwitterCollector implements IDataCollector {
         this.dataStream = dataStream;
 
         this.dataStreamDAO = dataStreamDAO;
-        this.dbw = new DatabaseWriter("Twitter", dataStream.getId(), false);
+        this.dbw = new DatabaseWriter("TwitterDataCollections", dataStream.getId(), false);
     }
 
     protected ConfigurationBuilder getBaseConfigurationBuilder() {

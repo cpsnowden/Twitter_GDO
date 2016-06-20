@@ -46,21 +46,20 @@ public class TwitterStreamCollector extends TwitterCollector implements Runnable
             @Override
             public void onStatus(Status status) {
 
-//                trial.insert(status);
-
-//                logger.info(status.getCreatedAt() + " " + status.getUser().getScreenName() + status.getText().replace("\n",""));
-                try {
-                    String statusJson = TwitterObjectFactory.getRawJSON(status);
-                    if(!dbw.insertJson(statusJson)){
-                        logger.warning("Failed to enter tweet " + status.getId() + " into database");
-                    }
-                } catch (IllegalStateException ex) {
-                    ex.printStackTrace();
-                    reportError();
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                    reportError();
-                }
+                trial.insert(status);
+                logger.info(status.getCreatedAt() + " " + status.getUser().getScreenName() + status.getText().replace("\n",""));
+//                try {
+//                    String statusJson = TwitterObjectFactory.getRawJSON(status);
+//                    if(!dbw.insertJson(statusJson)){
+//                        logger.warning("Failed to enter tweet " + status.getId() + " into database");
+//                    }
+//                } catch (IllegalStateException ex) {
+//                    ex.printStackTrace();
+//                    reportError();
+//                } catch (Exception ex) {
+//                    ex.printStackTrace();
+//                    reportError();
+//                }
 
                 if(requestStop || streamStopper.stop()) {
                     stopCollection();
