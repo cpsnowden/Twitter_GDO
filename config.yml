@@ -1,0 +1,15 @@
+version: 0.0.1
+mongohost: localhost
+mongoport: 27017
+mongodb: Twitterv2
+requestCollection: Requests
+streamCollection: Streams
+
+# Change default server ports
+server:
+  applicationConnectors:
+  - type: http
+    port: 9000
+  adminConnectors:
+  - type: http
+    port: 9001
