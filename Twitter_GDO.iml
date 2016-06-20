@@ -116,6 +116,7 @@
     <orderEntry type="library" name="Maven: org.apache.tomcat:tomcat-juli:8.0.28" level="project" />
     <orderEntry type="library" name="Maven: org.jdbi:jdbi:2.63.1" level="project" />
     <orderEntry type="library" name="Maven: io.dropwizard.metrics:metrics-jdbi:3.1.2" level="project" />
+    <orderEntry type="library" name="Maven: io.dropwizard:dropwizard-auth:0.9.2" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: junit:junit:3.8.1" level="project" />
     <orderEntry type="library" name="Maven: org.gephi:gephi-toolkit:0.9.1" level="project" />
     <orderEntry type="library" name="Maven: org.netbeans.modules:org-netbeans-modules-masterfs:RELEASE81" level="project" />

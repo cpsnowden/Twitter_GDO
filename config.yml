@@ -10,6 +10,15 @@ server:
   applicationConnectors:
   - type: http
     port: 9000
+  - type: https
+    port: 9001
+    keyStorePath: GdoTwit.keystore
+    keyStorePassword: gdotwitter
+    validateCerts: false
   adminConnectors:
   - type: http
-    port: 9001
+    port: 9002
+
+logging:
+
+  level: INFO

@@ -7,6 +7,8 @@ import com.cps15.api.persistence.DataStreamDAO;
 import com.cps15.api.persistence.DataStreamRequestDAO;
 import com.cps15.service.DataService.DataServiceManager;
 
+import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -19,7 +21,8 @@ import java.util.List;
  * Twitter_GDO
  * Created by chris on 19/06/2016.
  */
-@Path("/dataStream")
+@Path("/dataCollections/dataStream")
+@RolesAllowed({"APP","ADMIN","USER"})
 public class DataStreamResource {
 
     private DataStreamDAO dataStreamDAO;
@@ -36,6 +39,7 @@ public class DataStreamResource {
     }
 
     @GET
+    @PermitAll
     @Timed
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -45,6 +49,7 @@ public class DataStreamResource {
     }
 
     @GET
+    @PermitAll
     @Timed
     @Produces(MediaType.APPLICATION_JSON)
     public List<DataStream> getDataStreams() {
@@ -55,6 +60,7 @@ public class DataStreamResource {
 
     @POST
     @Timed
+    @RolesAllowed("ADMIN")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addDataStream(DataStreamRequest dataStreamRequest) {
