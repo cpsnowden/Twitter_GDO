@@ -2,9 +2,11 @@ package com.cps15.service.DataService;
 
 import com.cps15.api.data.DataStream;
 import com.cps15.api.data.IDataCollection;
+import com.cps15.api.data.Status;
 import com.cps15.api.persistence.DataStreamDAO;
 import com.cps15.service.Database.DatabaseWriter;
 
+import org.joda.time.DateTime;
 import twitter4j.conf.ConfigurationBuilder;
 
 import java.util.Date;
@@ -55,7 +57,7 @@ public abstract class TwitterCollector implements IDataCollector {
 
     protected void registerStarted() {
 
-        dataStream.setStatus(IDataCollection.STATUS.RUNNING);
+        dataStream.setStatus(Status.STATUS.RUNNING);
         dataStreamDAO.update(dataStream);
         logger.info("Collection " + dataStream.getDescription() + " registered as started");
 
@@ -64,14 +66,14 @@ public abstract class TwitterCollector implements IDataCollector {
     protected void registerFinished() {
 
         dataStream.setEndDate(new Date());
-        dataStream.setStatus(IDataCollection.STATUS.FINISHED);
+        dataStream.setStatus(Status.STATUS.FINISHED);
         dataStreamDAO.update(dataStream);
         logger.info("Collection " + dataStream.getDescription() + " registered as finished");
     }
 
     protected void registerError() {
 
-        dataStream.setStatus(IDataCollection.STATUS.ERROR);
+        dataStream.setStatus(Status.STATUS.ERROR);
         dataStreamDAO.update(dataStream);
         logger.severe("Collection " + dataStream.getDescription() + " registered as ERROR");
 
@@ -81,29 +83,10 @@ public abstract class TwitterCollector implements IDataCollector {
         this.requestStop = true;
     }
 
-    protected IDataCollection.STATUS getStatus() {
-        return dataStream.getStatus();
+    public void reset() {this.requestStop = false;}
+
+    public String getId() {
+        return this.dataStream.getId();
     }
 
 }
-
-//
-//    protected String registerCollectionExists(String description, List<String> tags, Document specificInformation) {
-//
-//        String user = System.getProperty("user.name");
-//        Document document = new Document("desciption", description)
-//                .append("collection", uniqueID)
-//                .append("start", new Date())
-//                .append("end", null)
-//                .append("status", STATUS.READY.toString())
-//                .append("user", user)
-//                .append("tags", tags)
-//                .append("other", specificInformation);
-//
-//        this.dbw.insertDocument(document, "Admin");
-//        this.status = STATUS.READY;
-//        return this.uniqueID;
-//
-//
-//
-//    }

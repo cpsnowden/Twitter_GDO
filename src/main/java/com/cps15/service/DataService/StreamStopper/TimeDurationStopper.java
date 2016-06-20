@@ -13,9 +13,14 @@ public class TimeDurationStopper implements IStreamStopper {
     private Instant start;
     private Duration durationLimit;
     private static final Logger logger = Logger.getLogger(TimeDurationStopper.class.getName());
+    private String description;
+
+    public TimeDurationStopper() {};
 
     public TimeDurationStopper(Duration durationLimit) {
+
         this.durationLimit = durationLimit;
+        this.description = this.toString();
     }
 
     @Override
@@ -36,8 +41,16 @@ public class TimeDurationStopper implements IStreamStopper {
     }
 
     @Override
-    public String getDesciption() {
-        return "Time<"+durationLimit.toString();
+    public String getDescription() {
+        return description;
     }
 
+
+    @Override
+    public String toString() {
+        return "TimeDurationStopper{" +
+                "start=" + start +
+                ", durationLimit=" + durationLimit +
+                '}';
+    }
 }

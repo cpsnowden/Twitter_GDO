@@ -4,6 +4,7 @@ package com.cps15.service.DataService;
 import com.cps15.api.data.DataStream;
 import com.cps15.api.persistence.DataStreamDAO;
 import com.cps15.service.DataService.StreamStopper.IStreamStopper;
+import com.cps15.service.DataService.StreamStopper.StreamStopperFactory;
 import org.bson.Document;
 import org.mongojack.JacksonDBCollection;
 import twitter4j.*;
@@ -23,15 +24,16 @@ public class TwitterStreamCollector extends TwitterCollector implements Runnable
 
     JacksonDBCollection<Status,String> trial;
 
-    public TwitterStreamCollector(String[] auth, DataStream dataStream, IStreamStopper streamStopper, DataStreamDAO dataStreamDAO){
+    public TwitterStreamCollector(String[] auth, DataStream dataStream, DataStreamDAO dataStreamDAO){
         super(auth, dataStream, dataStreamDAO);
 
-        this.streamStopper = streamStopper;
+        this.streamStopper = new StreamStopperFactory()
+                .setStopperType(dataStream.getLimitType())
+                .setLimit(dataStream.getLimit())
+                .build();
+
         this.twitterStream = new TwitterStreamFactory(getBaseConfigurationBuilder().build()).getInstance();
         this.twitterStream.addListener(getStatusListener());
-
-
-
 
         trial =  JacksonDBCollection.wrap(this.dbw.getDBCollection(),Status.class,String.class);
 
@@ -44,9 +46,9 @@ public class TwitterStreamCollector extends TwitterCollector implements Runnable
             @Override
             public void onStatus(Status status) {
 
-                trial.insert(status);
+//                trial.insert(status);
 
-                logger.info(status.getCreatedAt() + " " + status.getUser().getScreenName() + status.getText().replace("\n",""));
+//                logger.info(status.getCreatedAt() + " " + status.getUser().getScreenName() + status.getText().replace("\n",""));
                 try {
                     String statusJson = TwitterObjectFactory.getRawJSON(status);
                     if(!dbw.insertJson(statusJson)){
@@ -87,13 +89,15 @@ public class TwitterStreamCollector extends TwitterCollector implements Runnable
 
             @Override
             public void onException(Exception e) {
+
+                e.printStackTrace();
                 reportError();
             }
         };
     }
 
     private void startCollection() {
-
+        logger.info("Stating collection " + dataStream.toString());
         registerStarted();
         streamStopper.start();
         List<String> tags = dataStream.getTags();

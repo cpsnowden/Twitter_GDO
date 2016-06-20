@@ -1,5 +1,7 @@
 package com.cps15.api.data;
 
+import org.joda.time.DateTime;
+
 import javax.annotation.Nullable;
 import java.util.Date;
 
@@ -9,15 +11,13 @@ import java.util.Date;
  */
 public interface IDataCollection {
 
-    enum STATUS {ORDERED, RUNNING, FINISHED, ERROR};
-
     String getId();
 
     Date getStartDate();
     Date getEndDate();
     void setEndDate(@Nullable Date endDate);
 
-    STATUS getStatus();
-    void setStatus(STATUS status);
+    Status.STATUS getStatus();
+    void setStatus(Status.STATUS status);
 
 }

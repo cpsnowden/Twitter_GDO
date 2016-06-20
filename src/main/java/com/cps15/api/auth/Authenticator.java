@@ -27,8 +27,7 @@ public class Authenticator implements io.dropwizard.auth.Authenticator<BasicCred
 
     @Override
     public Optional<User> authenticate(BasicCredentials credentials) throws AuthenticationException {
-        System.out.println(credentials.getUsername());
-        System.out.println(credentials.getPassword());
+
         if (VALID_USERS.containsKey(credentials.getUsername()) && "secret".equals(credentials.getPassword())) {
             return Optional.of(new User(credentials.getUsername(), VALID_USERS.get(credentials.getUsername())));
         }

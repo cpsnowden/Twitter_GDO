@@ -1,14 +1,11 @@
 package com.cps15.service.DataService;
 
 import com.cps15.api.data.DataStream;
+import com.cps15.api.data.Status;
 import com.cps15.api.persistence.DataStreamDAO;
-import com.cps15.service.DataService.StreamStopper.TimeDurationStopper;
-import com.mysql.fabric.xmlrpc.base.Data;
-import org.mongojack.JacksonDBCollection;
 
-import java.time.Duration;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Twitter_GDO
@@ -23,18 +20,77 @@ public class DataServiceManager {
             "74E59bkWxpa44TF8ZbAmX81Rt2ArlvR2ziWNUnrhQLuiY"
     };
 
-    private final Set<Thread> workers = new HashSet<>();
+    private final Map<String, Thread> workers = new HashMap<>();
+    private final Map<String, TwitterStreamCollector> tasks = new HashMap<>();
     private DataStreamDAO dataStreamDAO;
     public DataServiceManager(DataStreamDAO dataStreamDAO) {
         this.dataStreamDAO = dataStreamDAO;
     }
 
-    public void addDataStream(DataStream dataStream) {
+    public boolean addDataStream(DataStream dataStream) {
 
-        TwitterStreamCollector tsc = new TwitterStreamCollector(auth, dataStream, new TimeDurationStopper(Duration.ofSeconds(30)), dataStreamDAO);
+        TwitterStreamCollector tsc = new TwitterStreamCollector(auth, dataStream, dataStreamDAO);
         Thread worker = new Thread(tsc);
-        workers.add(worker);
 
-        worker.start();
+        if(workers.containsKey(tsc.getId())) {
+            return false;
+        } else {
+            workers.put(tsc.getId(), worker);
+            tasks.put(tsc.getId(), tsc);
+            worker.start();
+        }
+
+        return true;
     }
+
+    public boolean stopDataService(DataStream dataStream) {
+
+        String id = dataStream.getId();
+
+        if(dataStream.getStatus() == Status.STATUS.RUNNING) {
+            TwitterStreamCollector tsc = tasks.get(id);
+            if(id != null) {
+                tsc.requestStop();
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public boolean attemptRestartDataService(DataStream dataStream, boolean force) {
+
+        String id = dataStream.getId();
+
+        if(!force) {
+            switch (dataStream.getStatus()) {
+                case ERROR:
+                    return false;
+                case ORDERED:
+                    return false;
+                case RUNNING:
+                    return false;
+            }
+        }
+
+        TwitterStreamCollector tsc = tasks.get(id);
+        if(tsc == null) {
+            tsc = new TwitterStreamCollector(auth, dataStream, dataStreamDAO);
+        }
+        tsc.reset();
+
+//                Thread oldThread = workers.get(id);
+//                System.out.println("Warning " + oldThread.isAlive());
+
+
+        Thread newThread = new Thread(tsc);
+        workers.replace(id, newThread);
+        newThread.start();
+
+
+        return true;
+
+
+    }
+
 }

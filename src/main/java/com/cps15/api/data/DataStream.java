@@ -1,10 +1,13 @@
 package com.cps15.api.data;
 
+import com.cps15.service.DataService.StreamStopper.IStreamStopper;
+import com.cps15.service.DataService.StreamStopper.StreamStopperFactory;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.annotation.Nullable;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
+import java.security.InvalidParameterException;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -17,7 +20,8 @@ public class DataStream extends DataStreamRequest implements IDataCollection {
 
     @Id
     private String id = "DS_" + UUID.randomUUID().toString();
-    private IDataCollection.STATUS status;
+
+    private Status.STATUS status;
 
     @NotNull
     private Date startDate;
@@ -26,19 +30,22 @@ public class DataStream extends DataStreamRequest implements IDataCollection {
 
     public DataStream() {}
 
-    public DataStream(String description, List<String> tags) {
-        super(description, tags);
+    public DataStream(String description, String limitType, int limit, List<String> tags) {
+        super(description, limitType, limit, tags);
         this.startDate = new Date();
-        this.status = IDataCollection.STATUS.ORDERED;
+        this.status = Status.STATUS.ORDERED;
     }
 
-    public DataStream(DataStreamRequest dataStreamRequest) {
-        this(dataStreamRequest.getDescription(), dataStreamRequest.getTags());
+    public DataStream(DataStreamRequest dataStreamRequest) throws InvalidParameterException {
+
+        this(dataStreamRequest.getDescription(),
+                dataStreamRequest.getLimitType(),
+                dataStreamRequest.getLimit(),
+                dataStreamRequest.getTags());
     }
 
     @JsonProperty
     public String getId() {
-        System.out.println(id);
         return id;
     }
 
@@ -59,13 +66,22 @@ public class DataStream extends DataStreamRequest implements IDataCollection {
     }
 
     @JsonProperty
-    public IDataCollection.STATUS getStatus() {
+    public Status.STATUS getStatus() {
         return status;
     }
 
     @JsonProperty
-    public void setStatus(IDataCollection.STATUS status) {
+    public void setStatus(Status.STATUS status) {
         this.status = status;
     }
 
+    @Override
+    public String toString() {
+        return "DataStream{" +
+                "id='" + id + '\'' +
+                ", status=" + status +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                '}';
+    }
 }

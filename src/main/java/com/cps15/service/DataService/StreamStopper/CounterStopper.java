@@ -8,12 +8,16 @@ import java.util.logging.Logger;
  */
 public class CounterStopper implements IStreamStopper {
 
-    private long counter = 0;
+    private long counter;
     private long counterLimit;
     private static final Logger logger = Logger.getLogger(CounterStopper.class.getName());
+    private String description;
+
+    public CounterStopper() {};
 
     public CounterStopper(long counterLimit) {
         this.counterLimit = counterLimit;
+        this.description = this.toString();
     }
 
     @Override
@@ -28,11 +32,19 @@ public class CounterStopper implements IStreamStopper {
 
     @Override
     public void start() {
+        counter = 0;
     }
 
     @Override
-    public String getDesciption() {
-        return "Count<"+counterLimit;
+    public String getDescription() {
+        return description;
     }
 
+    @Override
+    public String toString() {
+        return "CounterStopper{" +
+                "counter=" + counter +
+                ", counterLimit=" + counterLimit +
+                '}';
+    }
 }
