@@ -1,9 +1,10 @@
 package com.cps15.service.DataService;
 
 import com.cps15.api.data.DataStream;
+import com.cps15.api.data.IDataCollection;
+import com.cps15.api.persistence.DataStreamDAO;
 import com.cps15.service.Database.DatabaseWriter;
 
-import org.mongojack.JacksonDBCollection;
 import twitter4j.conf.ConfigurationBuilder;
 
 import java.util.Date;
@@ -22,20 +23,21 @@ public abstract class TwitterCollector implements IDataCollector {
     private String AccessToken;
     private String AccessTokenSecret;
 
-    private JacksonDBCollection<DataStream, String> streamCollection;
+    private DataStreamDAO dataStreamDAO;
 
     protected DataStream dataStream;
     protected boolean requestStop;
     protected DatabaseWriter dbw;
 
-    public TwitterCollector(String[] auth, DataStream dataStream, JacksonDBCollection<DataStream, String> streamCollection) {
+    public TwitterCollector(String[] auth, DataStream dataStream, DataStreamDAO dataStreamDAO) {
 
         this.ConsumerKey = auth[0];
         this.ConsumerSecret = auth[1];
         this.AccessToken = auth[2];
         this.AccessTokenSecret = auth[3];
         this.dataStream = dataStream;
-        this.streamCollection = streamCollection;
+
+        this.dataStreamDAO = dataStreamDAO;
         this.dbw = new DatabaseWriter("Twitter", dataStream.getId(), false);
     }
 
@@ -53,8 +55,8 @@ public abstract class TwitterCollector implements IDataCollector {
 
     protected void registerStarted() {
 
-        dataStream.setStatus(DataStream.STATUS.RUNNING);
-        streamCollection.updateById(dataStream.getId(), dataStream);
+        dataStream.setStatus(IDataCollection.STATUS.RUNNING);
+        dataStreamDAO.update(dataStream);
         logger.info("Collection " + dataStream.getDescription() + " registered as started");
 
     }
@@ -62,15 +64,15 @@ public abstract class TwitterCollector implements IDataCollector {
     protected void registerFinished() {
 
         dataStream.setEndDate(new Date());
-        dataStream.setStatus(DataStream.STATUS.FINISHED);
-        streamCollection.updateById(dataStream.getId(), dataStream);
+        dataStream.setStatus(IDataCollection.STATUS.FINISHED);
+        dataStreamDAO.update(dataStream);
         logger.info("Collection " + dataStream.getDescription() + " registered as finished");
     }
 
     protected void registerError() {
 
-        dataStream.setStatus(DataStream.STATUS.ERROR);
-        streamCollection.updateById(dataStream.getId(), dataStream);
+        dataStream.setStatus(IDataCollection.STATUS.ERROR);
+        dataStreamDAO.update(dataStream);
         logger.severe("Collection " + dataStream.getDescription() + " registered as ERROR");
 
     }
@@ -79,7 +81,7 @@ public abstract class TwitterCollector implements IDataCollector {
         this.requestStop = true;
     }
 
-    protected DataStream.STATUS getStatus() {
+    protected IDataCollection.STATUS getStatus() {
         return dataStream.getStatus();
     }
 

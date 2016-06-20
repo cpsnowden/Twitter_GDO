@@ -1,6 +1,7 @@
 package com.cps15.service.DataService;
 
 import com.cps15.api.data.DataStream;
+import com.cps15.api.persistence.DataStreamDAO;
 import com.cps15.service.DataService.StreamStopper.TimeDurationStopper;
 import com.mysql.fabric.xmlrpc.base.Data;
 import org.mongojack.JacksonDBCollection;
@@ -23,14 +24,14 @@ public class DataServiceManager {
     };
 
     private final Set<Thread> workers = new HashSet<>();
-    private JacksonDBCollection<DataStream, String> streamCollection;
-    public DataServiceManager(JacksonDBCollection<DataStream, String> streamCollection) {
-        this.streamCollection = streamCollection;
+    private DataStreamDAO dataStreamDAO;
+    public DataServiceManager(DataStreamDAO dataStreamDAO) {
+        this.dataStreamDAO = dataStreamDAO;
     }
 
     public void addDataStream(DataStream dataStream) {
 
-        TwitterStreamCollector tsc = new TwitterStreamCollector(auth, dataStream, new TimeDurationStopper(Duration.ofSeconds(30)), streamCollection);
+        TwitterStreamCollector tsc = new TwitterStreamCollector(auth, dataStream, new TimeDurationStopper(Duration.ofSeconds(30)), dataStreamDAO);
         Thread worker = new Thread(tsc);
         workers.add(worker);
 

@@ -3,10 +3,9 @@ package com.cps15.api.resources;
 import com.codahale.metrics.annotation.Timed;
 import com.cps15.api.data.DataStream;
 import com.cps15.api.data.DataStreamRequest;
+import com.cps15.api.persistence.DataStreamDAO;
+import com.cps15.api.persistence.DataStreamRequestDAO;
 import com.cps15.service.DataService.DataServiceManager;
-import org.mongojack.DBCursor;
-import org.mongojack.JacksonDBCollection;
-
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -14,7 +13,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,19 +22,17 @@ import java.util.List;
 @Path("/dataStream")
 public class DataStreamResource {
 
-    private JacksonDBCollection<DataStreamRequest, String> requestCollection;
-    private JacksonDBCollection<DataStream, String> streamCollection;
+    private DataStreamDAO dataStreamDAO;
+    private DataStreamRequestDAO dataStreamRequestDAO;
     private DataServiceManager dataServiceManager;
 
     @Context
     UriInfo uriInfo;
 
-    public DataStreamResource(JacksonDBCollection<DataStreamRequest, String> requestCollection,
-                              JacksonDBCollection<DataStream, String> streamCollection,
-                              DataServiceManager dataServiceManager) {
-        this.requestCollection = requestCollection;
-        this.streamCollection = streamCollection;
-        this.dataServiceManager = dataServiceManager;
+    public DataStreamResource(DataStreamDAO dataStreamDAO, DataStreamRequestDAO dataStreamRequestDAO) {
+        this.dataStreamDAO = dataStreamDAO;
+        this.dataStreamRequestDAO = dataStreamRequestDAO;
+        this.dataServiceManager = new DataServiceManager(dataStreamDAO);
     }
 
     @GET
@@ -45,20 +41,16 @@ public class DataStreamResource {
     @Produces(MediaType.APPLICATION_JSON)
     public DataStream getDataStream(@PathParam("id") String id) {
 
-        return streamCollection.findOneById(id);
+        return dataStreamDAO.findByID(id);
     }
 
     @GET
     @Timed
     @Produces(MediaType.APPLICATION_JSON)
     public List<DataStream> getDataStreams() {
-        List<DataStream> dataStreams = new ArrayList<>();
-        DBCursor<DataStream> cursor = streamCollection.find();
-        while(cursor.hasNext()) {
-            dataStreams.add(cursor.next());
-        }
 
-        return dataStreams;
+        return dataStreamDAO.dataStreams();
+
     }
 
     @POST
@@ -66,13 +58,13 @@ public class DataStreamResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addDataStream(DataStreamRequest dataStreamRequest) {
-        requestCollection.insert(dataStreamRequest);
+
+        dataStreamRequestDAO.addDataStreamRequest(dataStreamRequest);
         URI createdURI =  uriInfo.getAbsolutePathBuilder().path("1").build();
 
-        DataStream dataStream = new DataStream(dataStreamRequest.getDescription(),
-                dataStreamRequest.getTags());
+        DataStream dataStream = new DataStream(dataStreamRequest);
 
-        streamCollection.insert(dataStream);
+        dataStreamDAO.addDataStream(dataStream);
         dataServiceManager.addDataStream(dataStream);
 
         return Response.created(createdURI).entity(dataStream).build();

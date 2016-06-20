@@ -2,6 +2,7 @@ package com.cps15.service.DataService;
 
 
 import com.cps15.api.data.DataStream;
+import com.cps15.api.persistence.DataStreamDAO;
 import com.cps15.service.DataService.StreamStopper.IStreamStopper;
 import org.bson.Document;
 import org.mongojack.JacksonDBCollection;
@@ -22,8 +23,8 @@ public class TwitterStreamCollector extends TwitterCollector implements Runnable
 
     JacksonDBCollection<Status,String> trial;
 
-    public TwitterStreamCollector(String[] auth, DataStream dataStream, IStreamStopper streamStopper, JacksonDBCollection<DataStream, String> streamCollection){
-        super(auth, dataStream, streamCollection);
+    public TwitterStreamCollector(String[] auth, DataStream dataStream, IStreamStopper streamStopper, DataStreamDAO dataStreamDAO){
+        super(auth, dataStream, dataStreamDAO);
 
         this.streamStopper = streamStopper;
         this.twitterStream = new TwitterStreamFactory(getBaseConfigurationBuilder().build()).getInstance();
