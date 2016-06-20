@@ -3,9 +3,10 @@ package com.cps15;
 import com.cps15.api.data.DataStream;
 import com.cps15.api.data.DataStreamRequest;
 import com.cps15.api.health.MongoHealthCheck;
+import com.cps15.api.persistence.DataStreamDAO;
+import com.cps15.api.persistence.DataStreamRequestDAO;
 import com.cps15.api.persistence.MongoManaged;
 import com.cps15.api.resources.DataStreamResource;
-import com.cps15.service.DataService.DataServiceManager;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.mongodb.DB;
 import com.mongodb.Mongo;
@@ -41,6 +42,7 @@ public class TwitterServerApp extends Application<TwitterServerConfiguration> {
         JacksonDBCollection<DataStreamRequest, String> requestCollection = JacksonDBCollection.wrap(db.getCollection(twitterServerConfiguration.getRequestCollection()),DataStreamRequest.class, String.class);
 
 
-        environment.jersey().register(new DataStreamResource(requestCollection, streamCollection, new DataServiceManager(streamCollection)));
+        environment.jersey().register(new DataStreamResource(new DataStreamDAO(streamCollection), new DataStreamRequestDAO(requestCollection)));
+
     }
 }

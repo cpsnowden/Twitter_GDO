@@ -8,7 +8,7 @@ import java.util.List;
  * Twitter_GDO
  * Created by chris on 19/06/2016.
  */
-public class DataStreamRequest {
+public class DataStreamRequest implements IDataCollectionRequest {
 
     private String description;
     private List<String> tags;
