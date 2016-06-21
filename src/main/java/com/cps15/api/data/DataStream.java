@@ -1,8 +1,7 @@
 package com.cps15.api.data;
 
-import com.cps15.service.DataService.StreamStopper.IStreamStopper;
-import com.cps15.service.DataService.StreamStopper.StreamStopperFactory;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.joda.time.DateTime;
 
 import javax.annotation.Nullable;
 import javax.persistence.Id;
@@ -18,21 +17,23 @@ import java.util.UUID;
  */
 public class DataStream extends DataStreamRequest implements IDataCollection {
 
+
     @Id
     private String id = "DS_" + UUID.randomUUID().toString();
 
     private Status.STATUS status;
 
     @NotNull
-    private Date startDate;
+    private DateTime startDate;
     @Nullable
-    private Date endDate;
+    private DateTime endDate;
 
-    public DataStream() {}
+    public DataStream() {
+    }
 
     public DataStream(String description, String limitType, int limit, List<String> tags) {
         super(description, limitType, limit, tags);
-        this.startDate = new Date();
+        this.startDate = DateTime.now();
         this.status = Status.STATUS.ORDERED;
     }
 
@@ -50,18 +51,18 @@ public class DataStream extends DataStreamRequest implements IDataCollection {
     }
 
     @JsonProperty
-    public Date getStartDate() {
+    public DateTime getStartDate() {
         return startDate;
     }
 
     @JsonProperty
     @Nullable
-    public Date getEndDate() {
+    public DateTime getEndDate() {
         return endDate;
     }
 
     @JsonProperty
-    public void setEndDate(@Nullable Date endDate) {
+    public void setEndDate(@Nullable DateTime endDate) {
         this.endDate = endDate;
     }
 

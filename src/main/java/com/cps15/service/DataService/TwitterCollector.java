@@ -1,15 +1,12 @@
 package com.cps15.service.DataService;
 
 import com.cps15.api.data.DataStream;
-import com.cps15.api.data.IDataCollection;
 import com.cps15.api.data.Status;
 import com.cps15.api.persistence.DataStreamDAO;
-import com.cps15.service.Database.DatabaseWriter;
-
+import com.cps15.service.Database.DatabaseManager;
 import org.joda.time.DateTime;
 import twitter4j.conf.ConfigurationBuilder;
 
-import java.util.Date;
 import java.util.logging.Logger;
 
 /**
@@ -29,7 +26,7 @@ public abstract class TwitterCollector implements IDataCollector {
 
     protected DataStream dataStream;
     protected boolean requestStop;
-    protected DatabaseWriter dbw;
+    protected DatabaseManager dbm;
 
     public TwitterCollector(String[] auth, DataStream dataStream, DataStreamDAO dataStreamDAO) {
 
@@ -40,7 +37,8 @@ public abstract class TwitterCollector implements IDataCollector {
         this.dataStream = dataStream;
 
         this.dataStreamDAO = dataStreamDAO;
-        this.dbw = new DatabaseWriter("TwitterDataCollections", dataStream.getId(), false);
+        this.dbm = new DatabaseManager("TwitterDataCollections");
+
     }
 
     protected ConfigurationBuilder getBaseConfigurationBuilder() {
@@ -65,7 +63,7 @@ public abstract class TwitterCollector implements IDataCollector {
 
     protected void registerFinished() {
 
-        dataStream.setEndDate(new Date());
+        dataStream.setEndDate(DateTime.now());
         dataStream.setStatus(Status.STATUS.FINISHED);
         dataStreamDAO.update(dataStream);
         logger.info("Collection " + dataStream.getDescription() + " registered as finished");

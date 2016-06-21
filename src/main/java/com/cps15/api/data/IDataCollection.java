@@ -13,9 +13,9 @@ public interface IDataCollection {
 
     String getId();
 
-    Date getStartDate();
-    Date getEndDate();
-    void setEndDate(@Nullable Date endDate);
+    DateTime getStartDate();
+    DateTime getEndDate();
+    void setEndDate(@Nullable DateTime endDate);
 
     Status.STATUS getStatus();
     void setStatus(Status.STATUS status);

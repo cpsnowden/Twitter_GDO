@@ -5,6 +5,7 @@ import com.cps15.api.data.DataStream;
 import com.cps15.api.persistence.DataStreamDAO;
 import com.cps15.service.DataService.StreamStopper.IStreamStopper;
 import com.cps15.service.DataService.StreamStopper.StreamStopperFactory;
+import com.cps15.service.Database.StatusDAO;
 import org.bson.Document;
 import org.mongojack.JacksonDBCollection;
 import twitter4j.*;
@@ -21,8 +22,7 @@ public class TwitterStreamCollector extends TwitterCollector implements Runnable
     private static final Logger logger = Logger.getLogger(TwitterStreamCollector.class.getName());
     private TwitterStream twitterStream;
     private IStreamStopper streamStopper;
-
-    JacksonDBCollection<Status,String> trial;
+    private StatusDAO statusDAO;
 
     public TwitterStreamCollector(String[] auth, DataStream dataStream, DataStreamDAO dataStreamDAO){
         super(auth, dataStream, dataStreamDAO);
@@ -32,10 +32,9 @@ public class TwitterStreamCollector extends TwitterCollector implements Runnable
                 .setLimit(dataStream.getLimit())
                 .build();
 
+        this.statusDAO = new StatusDAO(dbm.getDb().getCollection(dataStream.getId()));
         this.twitterStream = new TwitterStreamFactory(getBaseConfigurationBuilder().build()).getInstance();
         this.twitterStream.addListener(getStatusListener());
-
-        trial =  JacksonDBCollection.wrap(this.dbw.getDBCollection(),Status.class,String.class);
 
     }
 
@@ -46,24 +45,14 @@ public class TwitterStreamCollector extends TwitterCollector implements Runnable
             @Override
             public void onStatus(Status status) {
 
-                trial.insert(status);
-                logger.info(status.getCreatedAt() + " " + status.getUser().getScreenName() + status.getText().replace("\n",""));
-//                try {
-//                    String statusJson = TwitterObjectFactory.getRawJSON(status);
-//                    if(!dbw.insertJson(statusJson)){
-//                        logger.warning("Failed to enter tweet " + status.getId() + " into database");
-//                    }
-//                } catch (IllegalStateException ex) {
-//                    ex.printStackTrace();
-//                    reportError();
-//                } catch (Exception ex) {
-//                    ex.printStackTrace();
-//                    reportError();
-//                }
+
+                logger.info(dataStream.getDescription() + status.getCreatedAt() + " " + status.getUser().getScreenName() + status.getText().replace("\n",""));
+                statusDAO.insert(status);
 
                 if(requestStop || streamStopper.stop()) {
                     stopCollection();
                 }
+
             }
 
             @Override

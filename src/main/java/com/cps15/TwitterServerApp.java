@@ -10,7 +10,10 @@ import com.cps15.api.persistence.DataStreamDAO;
 import com.cps15.api.persistence.DataStreamRequestDAO;
 import com.cps15.api.persistence.MongoManaged;
 import com.cps15.api.resources.DataStreamResource;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.util.ISO8601DateFormat;
+import com.fasterxml.jackson.datatype.joda.JodaModule;
 import com.mongodb.DB;
 import com.mongodb.Mongo;
 import com.mongodb.MongoClient;
@@ -18,10 +21,12 @@ import io.dropwizard.Application;
 import io.dropwizard.auth.AuthDynamicFeature;
 import io.dropwizard.auth.AuthValueFactoryProvider;
 import io.dropwizard.auth.basic.BasicCredentialAuthFilter;
+import io.dropwizard.jersey.jackson.JacksonMessageBodyProvider;
 import io.dropwizard.setup.Environment;
+import jdk.nashorn.internal.runtime.linker.Bootstrap;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 import org.mongojack.JacksonDBCollection;
-import twitter4j.auth.AuthorizationFactory;
+import org.mongojack.internal.MongoJackModule;
 
 
 /**
@@ -34,9 +39,29 @@ public class TwitterServerApp extends Application<TwitterServerConfiguration> {
         new TwitterServerApp().run(args);
     }
 
+
+//    @Override
+//    public void initialize(io.dropwizard.setup.Bootstrap<TwitterServerConfiguration> bootstrap) {
+//        super.initialize(bootstrap);
+//
+////        MongoJackModule.configure(bootstrap.getObjectMapper());
+//        bootstrap.getObjectMapper().registerModule(new JodaModule());
+//        bootstrap.getObjectMapper().setDateFormat(new ISO8601DateFormat());
+////        bootstrap.getObjectMapper().registerModule(new MongoJackModule());
+//
+//    }
+
     @Override
     public void run(TwitterServerConfiguration twitterServerConfiguration, Environment environment) throws Exception {
 
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.findAndRegisterModules();
+////        mapper.registerModule(new JavaTimeModule());
+//        mapper.registerModule(new JodaModule());
+//        environment.jersey().register(new JacksonMessageBodyProvider(mapper, environment.getValidator()));
+
+        MongoJackModule.configure(mapper);
         Mongo mongo = new MongoClient(twitterServerConfiguration.getMongohost(),
                 twitterServerConfiguration.getMongoport());
 
@@ -57,8 +82,10 @@ public class TwitterServerApp extends Application<TwitterServerConfiguration> {
 
 
 
+
+
         DB db = mongo.getDB(twitterServerConfiguration.getMongodb());
-        JacksonDBCollection<DataStream,String> streamCollection = JacksonDBCollection.wrap(db.getCollection(twitterServerConfiguration.getStreamCollection()),DataStream.class,String.class);
+        JacksonDBCollection<DataStream,String> streamCollection = JacksonDBCollection.wrap(db.getCollection(twitterServerConfiguration.getStreamCollection()),DataStream.class,String.class, mapper);
         JacksonDBCollection<DataStreamRequest, String> requestCollection = JacksonDBCollection.wrap(db.getCollection(twitterServerConfiguration.getRequestCollection()),DataStreamRequest.class, String.class);
 
 

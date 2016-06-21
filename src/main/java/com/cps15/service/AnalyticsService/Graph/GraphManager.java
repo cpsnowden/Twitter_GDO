@@ -1,9 +1,9 @@
 package com.cps15.service.AnalyticsService.Graph;
 
 import com.cps15.service.AnalyticsService.Analytics.SentimentParser;
-import com.cps15.service.Database.DatabaseReader;
+import com.cps15.service.Database.DatabaseManager;
+import com.cps15.service.Database.StatusDAO;
 import org.apache.commons.io.FilenameUtils;
-import org.bson.Document;
 import org.gephi.filters.api.FilterController;
 import org.gephi.filters.api.Query;
 import org.gephi.filters.plugin.graph.GiantComponentBuilder;
@@ -12,10 +12,13 @@ import org.gephi.io.exporter.api.ExportController;
 import org.gephi.io.exporter.spi.GraphExporter;
 import org.gephi.project.api.ProjectController;
 import org.gephi.project.api.Workspace;
+import org.mongojack.DBProjection;
+import org.mongojack.DBQuery;
 import org.openide.util.Lookup;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 
@@ -26,13 +29,13 @@ import java.util.stream.Stream;
 public class GraphManager {
 
     private static final Logger logger = Logger.getLogger(GraphManager.class.getName());
-    private DatabaseReader dbm;
+    private DatabaseManager dbm;
     private ProjectController pc;
     private Workspace workspace;
 
-    public GraphManager(String databaseName, boolean remote) {
+    public GraphManager(String database) {
 
-        dbm = new DatabaseReader(databaseName, remote);
+        this.dbm = new DatabaseManager(database);
         pc = Lookup.getDefault().lookup(ProjectController.class);
         pc.newProject();
         workspace = pc.getCurrentWorkspace();
@@ -75,10 +78,23 @@ public class GraphManager {
 
     public String getRetweetGraph(String collectionName, int maxNumber, int layoutDuration) {
 
+        StatusDAO statusDAO = new StatusDAO(dbm.getDb().getCollection(collectionName));
+
         logger.info("Getting graph");
         RetweetFunction retweetFunction = new RetweetFunction();
-        Stream<Document> twitterStream = dbm.getStream(collectionName, retweetFunction.getKeys(), maxNumber);
-        GraphModel graphModel = retweetFunction.getGraphCreator(twitterStream).getGraphModel(workspace);
+
+        List<String> keys = retweetFunction.getKeys();
+
+        DBQuery.Query query = DBQuery.empty();
+        for(String k:keys) {
+            DBQuery.and(query,DBQuery.notEquals(k,null));
+        }
+
+
+        Stream<twitter4j.Status> statusStream = statusDAO.getStream(query, DBProjection.include(keys.toArray(new String[keys.size()]))
+                ,maxNumber);
+
+        GraphModel graphModel = retweetFunction.getGraphCreator(statusStream).getGraphModel(workspace);
         logger.info("Got graph");
         filter(graphModel);
 

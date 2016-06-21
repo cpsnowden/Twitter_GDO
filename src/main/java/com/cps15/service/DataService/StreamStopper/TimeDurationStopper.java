@@ -1,5 +1,9 @@
 package com.cps15.service.DataService.StreamStopper;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import org.joda.time.DateTime;
+
 import java.time.Duration;
 import java.time.Instant;
 import java.util.logging.Logger;
@@ -10,10 +14,17 @@ import java.util.logging.Logger;
  */
 public class TimeDurationStopper implements IStreamStopper {
 
+    @JsonIgnore
     private Instant start;
+
+    @JsonIgnore
     private Duration durationLimit;
     private static final Logger logger = Logger.getLogger(TimeDurationStopper.class.getName());
+
+
     private String description;
+    private DateTime startv2;
+
 
     public TimeDurationStopper() {};
 
@@ -37,13 +48,15 @@ public class TimeDurationStopper implements IStreamStopper {
     public void start() {
 
         this.start = Instant.now();
-
+        this.startv2 = DateTime.now();
+        this.description = toString();
     }
 
     @Override
     public String getDescription() {
-        return description;
+        return toString();
     }
+
 
 
     @Override
@@ -51,6 +64,7 @@ public class TimeDurationStopper implements IStreamStopper {
         return "TimeDurationStopper{" +
                 "start=" + start +
                 ", durationLimit=" + durationLimit +
+                ", startv2 " + startv2 +
                 '}';
     }
 }

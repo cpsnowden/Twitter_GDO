@@ -82,7 +82,6 @@ public class DataServiceManager {
 //                Thread oldThread = workers.get(id);
 //                System.out.println("Warning " + oldThread.isAlive());
 
-
         Thread newThread = new Thread(tsc);
         workers.replace(id, newThread);
         newThread.start();

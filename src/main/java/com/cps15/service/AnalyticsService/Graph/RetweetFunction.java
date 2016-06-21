@@ -1,6 +1,6 @@
 package com.cps15.service.AnalyticsService.Graph;
 
-import org.bson.Document;
+import twitter4j.Status;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -9,7 +9,7 @@ import java.util.stream.Stream;
  * Twitter_GDO
  * Created by chris on 09/06/2016.
  */
-public class RetweetFunction implements IDocumentGraphFunction {
+public class RetweetFunction implements IStatusGraphFunction {
 
     private static TweetKeys tweetKeys = new TweetKeys("user.id_str",
             "retweeted_status.user.id_str",
@@ -18,17 +18,19 @@ public class RetweetFunction implements IDocumentGraphFunction {
             "text");
 
     @Override
-    public GraphCreator getGraphCreator(Stream<Document> documentStream) {
+    public GraphCreator getGraphCreator(Stream<Status> statusStream) {
 
         GraphCreator gc = new GraphCreator();
 
-        documentStream.forEach(document -> {
+        statusStream.forEach(status -> {
+            String source = String.valueOf(status.getUser().getId());
+            String target = String.valueOf(status.getRetweetedStatus().getUser().getId());
 
-            TweetKeys values = tweetKeys.getValues(document);
-            gc.addNode(values.getSourceKey(),values.getSourceLabel());
-            gc.addNode(values.getTargetKey(), values.getTargetLabel());
-            gc.addEdge(values.getSourceKey(), values.getTargetKey(), values.getEdgeLabel());
+            gc.addNode(source, status.getUser().getName());
+            gc.addNode(target, status.getRetweetedStatus().getUser().getName());
+            gc.addEdge(source,target);
         });
+
         return gc;
     }
 
