@@ -46,7 +46,7 @@ public class TwitterStreamCollector extends TwitterCollector implements Runnable
             public void onStatus(Status status) {
 
 
-                logger.info(dataStream.getDescription() + status.getCreatedAt() + " " + status.getUser().getScreenName() + status.getText().replace("\n",""));
+                logger.fine(dataStream.getDescription() + status.getCreatedAt() + " " + status.getUser().getScreenName() + status.getText().replace("\n",""));
                 statusDAO.insert(status);
 
                 if(requestStop || streamStopper.stop()) {

@@ -20,5 +20,16 @@ server:
     port: 9002
 
 logging:
-
-  level: INFO
+  level: ALL
+  appenders:
+    - type: file
+      currentLogFilename: log/status.log
+      threshold: ALL
+      archive: true
+      archivedLogFilenamePattern: log/status-%d.log
+      archivedFileCount: 5
+      timeZone: UTC
+    - type: console
+      threshold: WARNING
+      timeZone: UTC
+      target: stdout
