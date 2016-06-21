@@ -31,7 +31,6 @@ public class TwitterStreamCollector extends TwitterCollector implements Runnable
                 .setStopperType(dataStream.getLimitType())
                 .setLimit(dataStream.getLimit())
                 .build();
-        logger.info(dataStream.getDescription() + streamStopper.toString());
         this.statusDAO = new StatusDAO(dbm.getDb().getCollection(dataStream.getId()));
         this.twitterStream = new TwitterStreamFactory(getBaseConfigurationBuilder().build()).getInstance();
         this.twitterStream.addListener(getStatusListener());
@@ -46,7 +45,7 @@ public class TwitterStreamCollector extends TwitterCollector implements Runnable
             public void onStatus(Status status) {
 
 
-                logger.info(dataStream.getDescription() + status.getCreatedAt() + " " + status.getUser().getScreenName() + status.getText().replace("\n",""));
+                logger.fine(dataStream.getDescription() + " " + status.getUser().getScreenName() + status.getText().replace("\n",""));
                 statusDAO.insert(status);
 
                 if(requestStop || streamStopper.stop()) {
@@ -88,6 +87,7 @@ public class TwitterStreamCollector extends TwitterCollector implements Runnable
         logger.info("Stating collection " + dataStream.toString());
         registerStarted();
         streamStopper.start();
+        logger.info(dataStream.getDescription() + " limiter" + streamStopper.toString());
         List<String> tags = dataStream.getTags();
         twitterStream.filter(new FilterQuery().track(tags.toArray(new String[tags.size()])));
 

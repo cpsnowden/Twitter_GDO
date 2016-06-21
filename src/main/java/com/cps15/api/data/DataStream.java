@@ -31,7 +31,7 @@ public class DataStream extends DataStreamRequest implements IDataCollection {
     public DataStream() {
     }
 
-    public DataStream(String description, String limitType, int limit, List<String> tags) {
+    public DataStream(String description, String limitType, Long limit, List<String> tags) {
         super(description, limitType, limit, tags);
         this.startDate = DateTime.now();
         this.status = Status.STATUS.ORDERED;

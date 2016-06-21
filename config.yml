@@ -20,5 +20,19 @@ server:
     port: 9002
 
 logging:
-
   level: INFO
+  loggers:
+    com.cps15.service.DataService.TwitterStreamCollector: DEBUG
+  appenders:
+    - type: file
+      currentLogFilename: log/application.log
+      threshold: ALL
+      archive: true
+      archivedLogFilenamePattern: log/application-%i.log.gz
+      archivedFileCount: 5
+      timeZone: UTC
+      maxFileSize: 10MB
+    - type: console
+      threshold: WARNING
+      timeZone: UTC
+      target: stdout

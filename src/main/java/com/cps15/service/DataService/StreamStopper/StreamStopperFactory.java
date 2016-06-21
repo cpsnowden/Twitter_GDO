@@ -25,15 +25,13 @@ public class StreamStopperFactory {
     }
 
     private StopperType stopperType;
-    private Integer limit;
+    private Long limit;
 
     public StreamStopperFactory(){}
 
     public StreamStopperFactory setStopperType(String type) throws InvalidParameterException {
-        System.out.println(type);
         for(StopperType s: StopperType.values()) {
             if(type.equals(s.toString())) {
-                System.out.println("All good");
                 stopperType = s;
                 return this;
             }
@@ -42,8 +40,7 @@ public class StreamStopperFactory {
         throw new InvalidParameterException();
     }
 
-    public StreamStopperFactory setLimit(int limit) {
-        System.out.println(limit);
+    public StreamStopperFactory setLimit(Long limit) {
         this.limit = limit;
         return this;
     }
@@ -52,7 +49,7 @@ public class StreamStopperFactory {
         return stopperType;
     }
 
-    public int getLimit() {
+    public Long getLimit() {
         return limit;
     }
 
@@ -60,7 +57,7 @@ public class StreamStopperFactory {
         switch(stopperType) {
             case DURATION:
                 limit = limit==null?60*1000:limit;
-                return new TimeDurationStopper(Duration.ofMillis(limit));
+                return new TimeDurationStopper(org.joda.time.Duration.standardMinutes(limit));
             case COUNTER:
                 limit = limit==null?50:limit;
                 return new CounterStopper(limit);

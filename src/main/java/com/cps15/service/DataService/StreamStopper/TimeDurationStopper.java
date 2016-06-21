@@ -14,31 +14,25 @@ import java.util.logging.Logger;
  */
 public class TimeDurationStopper implements IStreamStopper {
 
-    @JsonIgnore
-    private Instant start;
 
-    @JsonIgnore
-    private Duration durationLimit;
+    private org.joda.time.DateTime start;
+    private org.joda.time.DateTime endPoint;
+    private org.joda.time.Duration durationLimit;
     private static final Logger logger = Logger.getLogger(TimeDurationStopper.class.getName());
-
-
-    private String description;
-    private DateTime startv2;
-
 
     public TimeDurationStopper() {};
 
-    public TimeDurationStopper(Duration durationLimit) {
+    public TimeDurationStopper(org.joda.time.Duration durationLimit) {
 
         this.durationLimit = durationLimit;
-        this.description = this.toString();
+
     }
 
     @Override
     public boolean stop() {
-        Duration duration = Duration.between(this.start, Instant.now());
-        if(start == null || duration.compareTo(durationLimit) > 0){
-            logger.info("Stopping after " + duration.toString());
+
+        if(start == null || endPoint.isBeforeNow()){
+            logger.info("Stopping after " + durationLimit + " at enpoint " + endPoint);
             return true;
         };
         return false;
@@ -47,9 +41,8 @@ public class TimeDurationStopper implements IStreamStopper {
     @Override
     public void start() {
 
-        this.start = Instant.now();
-        this.startv2 = DateTime.now();
-        this.description = toString();
+        this.start = DateTime.now();
+        this.endPoint = this.start.plus(this.durationLimit);
     }
 
     @Override
@@ -57,14 +50,12 @@ public class TimeDurationStopper implements IStreamStopper {
         return toString();
     }
 
-
-
     @Override
     public String toString() {
         return "TimeDurationStopper{" +
                 "start=" + start +
+                ", endPoint=" + endPoint +
                 ", durationLimit=" + durationLimit +
-                ", startv2 " + startv2 +
                 '}';
     }
 }

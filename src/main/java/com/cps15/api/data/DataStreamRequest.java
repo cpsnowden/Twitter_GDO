@@ -20,13 +20,13 @@ public class DataStreamRequest implements IDataCollectionRequest {
     @NotEmpty
     private String limitType;
     @NotNull
-    private int limit;
+    private Long limit;
 
     private List<String> tags;
 
     public DataStreamRequest() {}
 
-    public DataStreamRequest(String description, String limitType, int limit, List<String> tags) {
+    public DataStreamRequest(String description, String limitType, Long limit, List<String> tags) {
         this.description = description;
         this.limitType = limitType;
         this.limit = limit;
@@ -64,12 +64,12 @@ public class DataStreamRequest implements IDataCollectionRequest {
     }
 
     @JsonProperty
-    public int getLimit() {
+    public long getLimit() {
         return limit;
     }
 
     @JsonProperty
-    public void setLimit(int limit) {
+    public void setLimit(Long limit) {
         this.limit = limit;
     }
 }
