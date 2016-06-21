@@ -31,7 +31,7 @@ public class TwitterStreamCollector extends TwitterCollector implements Runnable
                 .setStopperType(dataStream.getLimitType())
                 .setLimit(dataStream.getLimit())
                 .build();
-
+        logger.info(dataStream.getDescription() + streamStopper.toString());
         this.statusDAO = new StatusDAO(dbm.getDb().getCollection(dataStream.getId()));
         this.twitterStream = new TwitterStreamFactory(getBaseConfigurationBuilder().build()).getInstance();
         this.twitterStream.addListener(getStatusListener());

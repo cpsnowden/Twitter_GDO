@@ -11,7 +11,7 @@ public interface IStreamStopper {
 
     boolean stop();
     void start();
-
+    String toString();
     String getDescription();
 
 }
