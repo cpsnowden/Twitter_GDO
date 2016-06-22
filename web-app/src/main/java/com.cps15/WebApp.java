@@ -7,7 +7,10 @@ public class WebApp{
 
     public static void main(String[] args) throws Exception {
 
-        String webAppDirLocation = "src/main/webapp";
+        String webappDirLocation = "src/main/webapp/";
+
+        // The port that we should run on can be set into an environment variable
+        // Look for that variable and default to 8080 if it isn't there.
         String webPort = System.getenv("PORT");
         if (webPort == null || webPort.isEmpty()) {
             webPort = "8080";
@@ -16,13 +19,11 @@ public class WebApp{
 
         WebAppContext webapp = new WebAppContext();
         webapp.setContextPath("/");
-        webapp.setDescriptor(webAppDirLocation + "/WEB-INF/web.xml");
-        webapp.setResourceBase(webAppDirLocation);
+        webapp.setDescriptor(webappDirLocation + "/WEB-INF/web.xml");
+        webapp.setResourceBase(webappDirLocation);
 
         server.setHandler(webapp);
-
         server.start();
         server.join();
-
     }
 }

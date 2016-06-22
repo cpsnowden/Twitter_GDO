@@ -6,9 +6,6 @@ import com.cps15.api.persistence.DataStreamDAO;
 import com.cps15.service.DataService.StreamStopper.IStreamStopper;
 import com.cps15.service.DataService.StreamStopper.StreamStopperFactory;
 import com.cps15.service.Database.StatusDAO;
-import org.bson.Document;
-import org.gephi.io.importer.api.Issue;
-import org.mongojack.JacksonDBCollection;
 import twitter4j.*;
 
 import java.util.List;

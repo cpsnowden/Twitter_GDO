@@ -57,9 +57,6 @@ public class TwitterServerApp extends Application<TwitterServerConfiguration> {
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.findAndRegisterModules();
-////        mapper.registerModule(new JavaTimeModule());
-//        mapper.registerModule(new JodaModule());
-//        environment.jersey().register(new JacksonMessageBodyProvider(mapper, environment.getValidator()));
 
         MongoJackModule.configure(mapper);
         Mongo mongo = new MongoClient(twitterServerConfiguration.getMongohost(),
