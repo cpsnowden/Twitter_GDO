@@ -7,6 +7,57 @@
     <groupId>com.cps15</groupId>
     <artifactId>TwitterServerApp</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
 
+    <modules>
+        <module>server</module>
+        <module>web-app</module>
+    </modules>
+
+    <properties>
+        <!-- Maven project settings -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- <buildnumber.version>1.1</buildnumber.version> -->
+        <maven.build.timestamp.format>yyyy-MM-dd HH:mm</maven.build.timestamp.format>
+        <targetJdk>1.8</targetJdk>
+        <java.version>1.8</java.version>
+
+        <!--
+        Jetty (for the angularjs-webapp). Make sure that the version corresponds with the Jetty
+        version included with Dropwizard. See:
+        http://mvnrepository.com/artifact/com.yammer.dropwizard/dropwizard-core/0.6.2
+        -->
+        <jetty.version>9.3.10.v20160621</jetty.version>
+
+        <!-- For JSP jars -->
+        <glassfish.javax.version>2.2.3</glassfish.javax.version>
+
+    </properties>
+
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-webapp</artifactId>
+                <version>${jetty.version}</version>
+            </dependency>
+
+            <!-- For the ProxyServlet -->
+            <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-servlets</artifactId>
+                <version>${jetty.version}</version>
+            </dependency>
+
+            <!-- JSP Support -->
+            <dependency>
+                <groupId>org.glassfish.web</groupId>
+                <artifactId>javax.servlet.jsp</artifactId>
+                <version>${glassfish.javax.version}</version>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
 
 </project>

@@ -24,7 +24,6 @@
         <processorPath useClasspath="true" />
         <module name="GDO_Twitter_Server" />
         <module name="server" />
-        <module name="TwitterServerApp" />
         <module name="web-app" />
       </profile>
     </annotationProcessing>
@@ -32,7 +31,7 @@
       <module name="GDO_Twitter_Server" target="1.8" />
       <module name="server" target="1.8" />
       <module name="TwitterServerApp" target="1.5" />
-      <module name="web-app" target="1.5" />
+      <module name="web-app" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

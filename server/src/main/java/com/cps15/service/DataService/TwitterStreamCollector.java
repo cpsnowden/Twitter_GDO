@@ -7,10 +7,12 @@ import com.cps15.service.DataService.StreamStopper.IStreamStopper;
 import com.cps15.service.DataService.StreamStopper.StreamStopperFactory;
 import com.cps15.service.Database.StatusDAO;
 import org.bson.Document;
+import org.gephi.io.importer.api.Issue;
 import org.mongojack.JacksonDBCollection;
 import twitter4j.*;
 
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -71,13 +73,13 @@ public class TwitterStreamCollector extends TwitterCollector implements Runnable
 
             @Override
             public void onStallWarning(StallWarning stallWarning) {
-
+                logger.log(Level.SEVERE, "Ex", stallWarning);
             }
 
             @Override
             public void onException(Exception e) {
 
-                e.printStackTrace();
+                logger.log(Level.SEVERE, "Ex", e);
                 reportError();
             }
         };
