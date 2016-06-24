@@ -1,6 +1,6 @@
 //package com.cps15.service.DataService;
 //
-//import com.cps15.api.data.DataStream;
+//import com.cps15.api.data.DataFilter;
 //import com.cps15.service.DataService.StreamStopper.CounterStopper;
 //import com.cps15.service.DataService.StreamStopper.IStreamStopper;
 //import com.cps15.service.DataService.StreamStopper.TimeDurationStopper;
@@ -32,11 +32,11 @@
 //        IStreamStopper d_stopper = new TimeDurationStopper(Duration.ofDays(1));
 //
 //
-//        DataStream dataStream = new DataStream(collectionName, trackTerms);
+//        DataFilter dataFilter = new DataFilter(collectionName, trackTerms);
 //
 //
 //
-//        TwitterStreamCollector tsc = new TwitterStreamCollector(auth,dataStream,c_stopper, );
+//        TwitterStreamCollector tsc = new TwitterStreamCollector(auth,dataFilter,c_stopper, );
 //        Thread collector = new Thread(tsc);
 //        collector.start();
 //

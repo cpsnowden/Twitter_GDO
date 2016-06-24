@@ -1,51 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<html>
+<html ng-app = "twitterGDOAccess">
 <head>
-    <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
-    <!--link rel="stylesheet" href="css/foundation.min.css"-->
+    <!--<link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">-->
+
     <link rel="stylesheet" href="css/raffler.css">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+    <!--<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">-->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular-resource.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular-route.min.js"></script>
+    <script src="js/twitterGDOAccess.js"></script>
+    <script src="js/DataFilter.js"></script>
+    <script src="js/lib/ui-bootstrap-tpls-0.5.0.js"></script>
+    <!--<script src="js/lib/ui-bootstrap-tpls-1.3.3.js"></script>-->
+
+    <title>Twitter Data Collection</title>
 </head>
-<body>
 
-<div class="container-fluid" ng-app="helloApp">
+<body ng-controller="mainController">
+<div id="wrap">
+    <div class="navbar navbar-inverse" role="navigation">
+        <div class="container">
 
-    <div class="row-fluid">
 
-        <!--Sidebar content-->
-        <div class="span2">
-            <div ng-controller="MenuCtrl">
-                <div menu></div>
-            </div>
-        </div>
+        <div class="navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="#/"><i class="fa fa-home"></i> Home</a></li>
+                <li><a href="#dataFilters"><i class="fa fa-filter"></i> Data Filters</a></li>
+            </ul></div><!--//--></div></div>
 
-        <!--Body content-->
-        <div class="span10">
-            <div ng-view></div>
-        </div>
+    <div ng-view></div>
 
+</div>
+
+<div id="footer">
+    <div class="container">
+        <p class="text-muted">
+            Imperial College KMPG GDO (cps15)
+        </p>
     </div>
 </div>
 
-<!-- AngularJS and Boostrap JS files -->
-<script type="text/javascript" src="js/lib/angular-1.2.0rc1.js"></script>
-<script type="text/javascript" src="js/lib/angular-resource-1.2.0rc1.js"></script>
-<script type="text/javascript" src="js/lib/angular-route-1.2.0rc1.js"></script>
 
-<!--
-Using the UI Bootstrap AngularJS directives for Bootstrap here. For more info see:
-http://angular-ui.github.io/bootstrap/
--->
-<script src="js/lib/ui-bootstrap-tpls-0.5.0.js"></script>
 
-<!-- Project specific JS files -->
-<script src="js/menu.js"></script>
-<script src="js/sharing-data.js"></script>
-<script src="js/avengers.js"></script>
-<script src="js/scope-isolation.js"></script>
-<script src="js/twitter.js"></script>
-<script src="js/raffler.js"></script>
-<script src="js/tabset.js"></script>
-<script src="js/persons.js"></script>
-<script src="js/hello.js"></script>
 </body>
 </html>

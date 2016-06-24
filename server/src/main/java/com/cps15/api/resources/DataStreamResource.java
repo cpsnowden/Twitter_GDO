@@ -1,14 +1,13 @@
 package com.cps15.api.resources;
 
 import com.codahale.metrics.annotation.Timed;
-import com.cps15.api.data.DataStream;
+import com.cps15.api.data.DataFilter;
 import com.cps15.api.data.DataStreamRequest;
 import com.cps15.api.data.Status;
-import com.cps15.api.persistence.DataStreamDAO;
+import com.cps15.api.persistence.DataFilterDAO;
 import com.cps15.api.persistence.DataStreamRequestDAO;
-import com.cps15.service.DataService.DataServiceManager;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.cps15.service.DataService.TwitterStreamManager;
+import com.cps15.service.Database.DatabaseManager;
 
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
@@ -17,7 +16,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import java.net.URI;
 import java.security.InvalidParameterException;
 import java.util.List;
 
@@ -25,21 +23,21 @@ import java.util.List;
  * Twitter_GDO
  * Created by chris on 19/06/2016.
  */
-@Path("/dataCollections/dataStream")
+@Path("/api/dataCollections/dataFilter")
 @RolesAllowed({"APP","ADMIN","USER"})
 public class DataStreamResource {
 
-    private DataStreamDAO dataStreamDAO;
+    private DataFilterDAO dataFilterDAO;
     private DataStreamRequestDAO dataStreamRequestDAO;
-    private DataServiceManager dataServiceManager;
+    private TwitterStreamManager twitterStreamManager;
 
     @Context
     UriInfo uriInfo;
 
-    public DataStreamResource(DataStreamDAO dataStreamDAO, DataStreamRequestDAO dataStreamRequestDAO) {
-        this.dataStreamDAO = dataStreamDAO;
+    public DataStreamResource(DataFilterDAO dataFilterDAO, DataStreamRequestDAO dataStreamRequestDAO) {
+        this.dataFilterDAO = dataFilterDAO;
         this.dataStreamRequestDAO = dataStreamRequestDAO;
-        this.dataServiceManager = new DataServiceManager(dataStreamDAO);
+        this.twitterStreamManager = new TwitterStreamManager(dataFilterDAO, new DatabaseManager("TwitterDataCollections"));
     }
 
     @GET
@@ -47,18 +45,39 @@ public class DataStreamResource {
     @Timed
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public DataStream getDataStream(@PathParam("id") String id) {
+    public Response getDataStream(@PathParam("id") String id) {
 
-        return dataStreamDAO.findByID(id);
+        DataFilter dataFilter = dataFilterDAO.findByID(id);
+        if(null == dataFilter) {
+            return Response.noContent().build();
+        } else {
+            return Response.ok(dataFilter).build();
+        }
+    }
+
+    @DELETE
+    @RolesAllowed("ADMIN")
+    @Path("/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteStream(@PathParam("id") String id){
+
+        DataFilter dataFilter = dataFilterDAO.findByID(id);
+        if(null == dataFilter) {
+            return Response.noContent().build();
+        } else if(!twitterStreamManager.deleteCollection(dataFilter)) {
+            return Response.serverError().build();
+        } else {
+            return Response.ok().build();
+        }
     }
 
     @GET
     @PermitAll
     @Timed
     @Produces(MediaType.APPLICATION_JSON)
-    public List<DataStream> getDataStreams() {
+    public List<DataFilter> getDataStreams() {
 
-        return dataStreamDAO.dataStreams();
+        return dataFilterDAO.dataStreams();
 
     }
 
@@ -71,21 +90,21 @@ public class DataStreamResource {
 
         dataStreamRequestDAO.addDataStreamRequest(dataStreamRequest);
 
-        DataStream dataStream;
+        DataFilter dataFilter;
+
         try {
-            dataStream = new DataStream(dataStreamRequest);
+            dataFilter = new DataFilter(dataStreamRequest);
         } catch (InvalidParameterException ex) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Unexpected limit type " + dataStreamRequest.getLimitType()).build();
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("Unexpected limit type " + dataStreamRequest.getLimitType())
+                    .build();
         }
 
-        dataStreamDAO.addDataStream(dataStream);
-        dataServiceManager.addDataStream(dataStream);
+        dataFilterDAO.addDataStream(dataFilter);
+        twitterStreamManager.startFilter(dataFilter);
 
-        return Response.created(uriInfo.getAbsolutePathBuilder().path(dataStream.getId()).build()).entity(dataStream).build();
+        return Response.created(uriInfo.getAbsolutePathBuilder().path(dataFilter.getId()).build()).entity(dataFilter).build();
     }
-
-
-
 
     @PUT
     @Timed
@@ -95,28 +114,19 @@ public class DataStreamResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response changeStatus(@PathParam("id") String id, Status status) {
 
-        DataStream dataStream = getDataStream(id);
-
-//        boolean confict = dataStream.getStatus() == status.getStatus();
-//        confict &= dataStream.getStatus() == Status.STATUS.ERROR;
-//
-//        if(confict) {
-//            return Response.status(Response.Status.CONFLICT).build();
-//        }
+        DataFilter dataFilter = dataFilterDAO.findByID(id);
+        if(null == dataFilter) {
+            return Response.noContent().build();
+        }
 
         if(status.getStatus() == Status.STATUS.STOPPED) {
-            return dataServiceManager.stopDataService(dataStream) ? Response.ok().build() : Response.status(Response.Status.CONFLICT).build();
+            return twitterStreamManager.stopFilter(dataFilter) ? Response.ok().build() : Response.status(Response.Status.CONFLICT).build();
         } else if(status.getStatus() == Status.STATUS.ORDERED) {
-            return dataServiceManager.attemptRestartDataService(dataStream, true) ?  Response.ok().build() : Response.status(Response.Status.CONFLICT).build();
+            return twitterStreamManager.restartFilter(dataFilter) ?  Response.ok().build() : Response.status(Response.Status.CONFLICT).build();
         }
 
         return Response.ok().build();
     }
-
-
-
-
-
 
     @GET
     @Timed
@@ -126,8 +136,12 @@ public class DataStreamResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response getStatus(@PathParam("id") String id) {
 
-        DataStream dataStream = getDataStream(id);
-        return Response.ok().entity(new Status(dataStream.getStatus())).build();
+        DataFilter dataFilter = dataFilterDAO.findByID(id);
+        if(null == dataFilter) {
+            return Response.noContent().build();
+        }
+
+        return Response.ok().entity(new Status(dataFilter.getStatus())).build();
 
     }
 

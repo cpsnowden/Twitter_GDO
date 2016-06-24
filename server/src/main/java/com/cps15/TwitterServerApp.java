@@ -2,18 +2,16 @@ package com.cps15;
 
 import com.cps15.api.auth.Authenticator;
 import com.cps15.api.auth.Authorizer;
-import com.cps15.api.data.DataStream;
+import com.cps15.api.data.DataFilter;
 import com.cps15.api.data.DataStreamRequest;
 import com.cps15.api.data.User;
 import com.cps15.api.health.MongoHealthCheck;
-import com.cps15.api.persistence.DataStreamDAO;
+import com.cps15.api.persistence.DataFilterDAO;
 import com.cps15.api.persistence.DataStreamRequestDAO;
 import com.cps15.api.persistence.MongoManaged;
 import com.cps15.api.resources.DataStreamResource;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.util.ISO8601DateFormat;
-import com.fasterxml.jackson.datatype.joda.JodaModule;
 import com.mongodb.DB;
 import com.mongodb.Mongo;
 import com.mongodb.MongoClient;
@@ -21,9 +19,7 @@ import io.dropwizard.Application;
 import io.dropwizard.auth.AuthDynamicFeature;
 import io.dropwizard.auth.AuthValueFactoryProvider;
 import io.dropwizard.auth.basic.BasicCredentialAuthFilter;
-import io.dropwizard.jersey.jackson.JacksonMessageBodyProvider;
 import io.dropwizard.setup.Environment;
-import jdk.nashorn.internal.runtime.linker.Bootstrap;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 import org.mongojack.JacksonDBCollection;
 import org.mongojack.internal.MongoJackModule;
@@ -82,11 +78,11 @@ public class TwitterServerApp extends Application<TwitterServerConfiguration> {
 
 
         DB db = mongo.getDB(twitterServerConfiguration.getMongodb());
-        JacksonDBCollection<DataStream,String> streamCollection = JacksonDBCollection.wrap(db.getCollection(twitterServerConfiguration.getStreamCollection()),DataStream.class,String.class, mapper);
+        JacksonDBCollection<DataFilter,String> streamCollection = JacksonDBCollection.wrap(db.getCollection(twitterServerConfiguration.getStreamCollection()),DataFilter.class,String.class, mapper);
         JacksonDBCollection<DataStreamRequest, String> requestCollection = JacksonDBCollection.wrap(db.getCollection(twitterServerConfiguration.getRequestCollection()),DataStreamRequest.class, String.class);
 
 
-        environment.jersey().register(new DataStreamResource(new DataStreamDAO(streamCollection), new DataStreamRequestDAO(requestCollection)));
+        environment.jersey().register(new DataStreamResource(new DataFilterDAO(streamCollection), new DataStreamRequestDAO(requestCollection)));
 
     }
 }
