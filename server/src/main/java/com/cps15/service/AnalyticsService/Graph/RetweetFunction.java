@@ -1,8 +1,12 @@
 package com.cps15.service.AnalyticsService.Graph;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
 import twitter4j.Status;
+import twitter4j.TwitterObjectFactory;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 /**
@@ -11,8 +15,8 @@ import java.util.stream.Stream;
  */
 public class RetweetFunction implements IStatusGraphFunction {
 
-    private static TweetKeys tweetKeys = new TweetKeys("user.id_str",
-            "retweeted_status.user.id_str",
+    private static TweetKeys tweetKeys = new TweetKeys("user.id",
+            "retweeted_status.user.id",
             "user.screen_name",
             "retweeted_status.user.screen_name",
             "text");
@@ -28,7 +32,7 @@ public class RetweetFunction implements IStatusGraphFunction {
 
             gc.addNode(source, status.getUser().getName());
             gc.addNode(target, status.getRetweetedStatus().getUser().getName());
-            gc.addEdge(source,target);
+            gc.addEdge(source,target, status.getText());
         });
 
         return gc;
@@ -37,6 +41,16 @@ public class RetweetFunction implements IStatusGraphFunction {
     @Override
     public List<String> getKeys() {
         return tweetKeys.getKeys();
+    }
+
+    public DBObject getQuery() {
+        BasicDBObject query = new BasicDBObject();
+        for(String k:getKeys()) {
+            query.put(k, new BasicDBObject("$ne",null));
+            query.put(k, new BasicDBObject("$exists",true));
+        }
+
+        return query;
     }
 
 }

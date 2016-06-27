@@ -2,14 +2,20 @@ package com.cps15;
 
 import com.cps15.api.auth.Authenticator;
 import com.cps15.api.auth.Authorizer;
-import com.cps15.api.data.DataFilter;
-import com.cps15.api.data.DataStreamRequest;
+import com.cps15.api.data.Analytics;
+import com.cps15.api.data.DatasetInfo;
+import com.cps15.api.data.DatasetRequest;
 import com.cps15.api.data.User;
 import com.cps15.api.health.MongoHealthCheck;
-import com.cps15.api.persistence.DataFilterDAO;
-import com.cps15.api.persistence.DataStreamRequestDAO;
+import com.cps15.api.persistence.AnalyticsDAO;
+import com.cps15.api.persistence.DatasetInfoDAO;
+import com.cps15.api.persistence.DatasetRequestDAO;
 import com.cps15.api.persistence.MongoManaged;
-import com.cps15.api.resources.DataStreamResource;
+import com.cps15.api.resources.DatasetResource;
+import com.cps15.service.AnalyticsService.AnalyticsManager;
+import com.cps15.service.DataService.DatasetManager;
+import com.cps15.service.DataService.TwitterStreams.Twitter4JAuth;
+import com.cps15.service.Database.DatabaseManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.mongodb.DB;
@@ -34,18 +40,6 @@ public class TwitterServerApp extends Application<TwitterServerConfiguration> {
     public static void main(String[] args) throws Exception {
         new TwitterServerApp().run(args);
     }
-
-
-//    @Override
-//    public void initialize(io.dropwizard.setup.Bootstrap<TwitterServerConfiguration> bootstrap) {
-//        super.initialize(bootstrap);
-//
-////        MongoJackModule.configure(bootstrap.getObjectMapper());
-//        bootstrap.getObjectMapper().registerModule(new JodaModule());
-//        bootstrap.getObjectMapper().setDateFormat(new ISO8601DateFormat());
-////        bootstrap.getObjectMapper().registerModule(new MongoJackModule());
-//
-//    }
 
     @Override
     public void run(TwitterServerConfiguration twitterServerConfiguration, Environment environment) throws Exception {
@@ -73,16 +67,22 @@ public class TwitterServerApp extends Application<TwitterServerConfiguration> {
         environment.jersey().register(new AuthValueFactoryProvider.Binder<>(User.class));
         environment.jersey().register(RolesAllowedDynamicFeature.class);
 
-
-
-
-
         DB db = mongo.getDB(twitterServerConfiguration.getMongodb());
-        JacksonDBCollection<DataFilter,String> streamCollection = JacksonDBCollection.wrap(db.getCollection(twitterServerConfiguration.getStreamCollection()),DataFilter.class,String.class, mapper);
-        JacksonDBCollection<DataStreamRequest, String> requestCollection = JacksonDBCollection.wrap(db.getCollection(twitterServerConfiguration.getRequestCollection()),DataStreamRequest.class, String.class);
+        JacksonDBCollection<DatasetInfo,String> streamCollection = JacksonDBCollection.wrap(db.getCollection(twitterServerConfiguration.getStreamCollection()),DatasetInfo.class,String.class, mapper);
+        JacksonDBCollection<DatasetRequest, String> requestCollection = JacksonDBCollection.wrap(db.getCollection(twitterServerConfiguration.getRequestCollection()),DatasetRequest.class, String.class);
+        JacksonDBCollection<Analytics, String> analyticsCollection = JacksonDBCollection.wrap(db.getCollection(twitterServerConfiguration.getAnalyticsCollection()), Analytics.class, String.class);
 
+        DatabaseManager dbm = new  DatabaseManager("TwitterDataCollections");
 
-        environment.jersey().register(new DataStreamResource(new DataFilterDAO(streamCollection), new DataStreamRequestDAO(requestCollection)));
+        Twitter4JAuth twitter4JAuth = new Twitter4JAuth(twitterServerConfiguration.getConsumerKey(),
+                twitterServerConfiguration.getConsumerSecret(),
+                twitterServerConfiguration.getAccessKey(),
+                twitterServerConfiguration.getAccessSecret());
+
+        environment.jersey().register(new DatasetResource(new DatasetManager(dbm,new DatasetInfoDAO(streamCollection),
+                                                                                    new DatasetRequestDAO(requestCollection),
+                                                                                        twitter4JAuth),
+                                                            new AnalyticsManager(new AnalyticsDAO(analyticsCollection),dbm)));
 
     }
 }

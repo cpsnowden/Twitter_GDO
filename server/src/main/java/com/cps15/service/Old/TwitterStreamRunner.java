@@ -1,9 +1,9 @@
 //package com.cps15.service.DataService;
 //
-//import com.cps15.api.data.DataFilter;
-//import com.cps15.service.DataService.StreamStopper.CounterStopper;
-//import com.cps15.service.DataService.StreamStopper.IStreamStopper;
-//import com.cps15.service.DataService.StreamStopper.TimeDurationStopper;
+//import com.cps15.api.data.DatasetInfo;
+//import com.cps15.service.DataService.TwitterStreams.StreamStopper.CounterStopper;
+//import com.cps15.service.DataService.TwitterStreams.StreamStopper.IStreamStopper;
+//import com.cps15.service.DataService.TwitterStreams.StreamStopper.TimeDurationStopper;
 //import com.cps15.service.DataService.TwitterStreamCollector;
 //
 //import java.time.Duration;
@@ -32,7 +32,7 @@
 //        IStreamStopper d_stopper = new TimeDurationStopper(Duration.ofDays(1));
 //
 //
-//        DataFilter dataFilter = new DataFilter(collectionName, trackTerms);
+//        DatasetInfo dataFilter = new DatasetInfo(collectionName, trackTerms);
 //
 //
 //

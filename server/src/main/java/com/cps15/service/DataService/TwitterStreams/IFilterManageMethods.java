@@ -1,4 +1,4 @@
-package com.cps15.service.DataService;
+package com.cps15.service.DataService.TwitterStreams;
 
 import com.cps15.api.data.Status;
 

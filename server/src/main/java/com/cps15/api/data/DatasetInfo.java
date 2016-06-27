@@ -7,7 +7,6 @@ import org.joda.time.DateTime;
 import javax.annotation.Nullable;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
-import javax.xml.crypto.Data;
 import java.security.InvalidParameterException;
 import java.util.List;
 import java.util.UUID;
@@ -16,70 +15,71 @@ import java.util.UUID;
  * Twitter_GDO
  * Created by chris on 19/06/2016.
  */
-public class DataFilter extends DataStreamRequest implements IDataCollection {
+public class DatasetInfo extends DatasetRequest{
 
 
     @Id
+    @JsonProperty
     private String id = "DS_" + UUID.randomUUID().toString();
 
+    @JsonProperty
     private Status.STATUS status;
 
     @NotNull
+    @JsonProperty
     private DateTime startDate;
+
     @Nullable
+    @JsonProperty
     private DateTime endDate;
 
-    public DataFilter() {
+    @Nullable
+    @JsonProperty
+    private Long filterSize = null;
+
+    public DatasetInfo() {
     }
 
-    public DataFilter(String description, String limitType, Long limit, List<String> tags) {
-        super(description, limitType, limit, tags);
+    public DatasetInfo(DatasetType datasetType, String description, String limitType, Long limit, List<String> tags) {
+        super(datasetType, description, limitType, limit, tags);
         this.startDate = DateTime.now();
         this.status = Status.STATUS.ORDERED;
     }
 
-    public DataFilter(DataStreamRequest dataStreamRequest) throws InvalidParameterException {
+    public DatasetInfo(DatasetRequest d) throws InvalidParameterException {
 
-        this(dataStreamRequest.getDescription(),
-                dataStreamRequest.getLimitType(),
-                dataStreamRequest.getLimit(),
-                dataStreamRequest.getTags());
+        this(d.getType(),d.getDescription(),d.getLimitType(),d.getLimit(),d.getTags());
+
     }
 
-    @JsonProperty
+
     public String getId() {
         return id;
     }
 
-    @JsonProperty
     public DateTime getStartDate() {
         return startDate;
     }
 
-    @JsonProperty
-    @Nullable
     public DateTime getEndDate() {
         return endDate;
     }
 
-    @JsonProperty
     public void setEndDate(@Nullable DateTime endDate) {
         this.endDate = endDate;
     }
 
-    @JsonProperty
     public Status.STATUS getStatus() {
         return status;
     }
 
-    @JsonProperty
     public void setStatus(Status.STATUS status) {
         this.status = status;
     }
 
     @Override
     public String toString() {
-        return "DataFilter{" +
+        return "DatasetInfo{" +
                 "id='" + id + '\'' +
                 ", status=" + status +
                 ", startDate=" + startDate +
@@ -87,41 +87,38 @@ public class DataFilter extends DataStreamRequest implements IDataCollection {
                 '}';
     }
 
-    @JsonIgnore
-    public DataFilter ordered() {
+    public DatasetInfo ordered() {
         status = Status.STATUS.ORDERED;
         return this;
     }
 
-    @JsonIgnore
-    public DataFilter running() {
+    public DatasetInfo running() {
         status = Status.STATUS.RUNNING;
+        filterSize = null;
         endDate = null;
         return this;
     }
 
-    @JsonIgnore
-    public DataFilter finished() {
+    public DatasetInfo finished() {
         status = Status.STATUS.FINISHED;
         endDate = DateTime.now();
         return this;
     }
 
-    @JsonIgnore
-    public DataFilter error() {
+    public DatasetInfo error() {
         status = Status.STATUS.ERROR;
         return this;
     }
 
-    @JsonIgnore
-    public DataFilter stopped() {
+
+    public DatasetInfo stopped() {
         status = Status.STATUS.STOPPED;
         endDate = DateTime.now();
         return this;
     }
 
     @JsonIgnore
-    public boolean isRuning(){
+    public boolean isRunning(){
         return Status.STATUS.RUNNING == status;
     }
 
@@ -140,5 +137,11 @@ public class DataFilter extends DataStreamRequest implements IDataCollection {
         return Status.STATUS.ORDERED == status;
     }
 
+    public Long getFilterSize() {
+        return filterSize;
+    }
 
+    public void setFilterSize(long filterSize) {
+        this.filterSize = filterSize;
+    }
 }

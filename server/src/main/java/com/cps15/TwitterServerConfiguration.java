@@ -30,6 +30,21 @@ public class TwitterServerConfiguration extends Configuration {
     @NotEmpty
     private String streamCollection;
 
+    @NotEmpty
+    private String analyticsCollection;
+
+    @NotEmpty
+    private String consumerKey;
+
+    @NotEmpty
+    private String consumerSecret;
+
+    @NotEmpty
+    private String accessKey;
+
+    @NotEmpty
+    private String accessSecret;
+
     @JsonProperty
     public String getMongodb() {
         return mongodb;
@@ -88,5 +103,55 @@ public class TwitterServerConfiguration extends Configuration {
     @JsonProperty
     public void setStreamCollection(String streamCollection) {
         this.streamCollection = streamCollection;
+    }
+
+    @JsonProperty
+    public String getAnalyticsCollection() {
+        return analyticsCollection;
+    }
+
+    @JsonProperty
+    public void setAnalyticsCollection(String analyticsCollection) {
+        this.analyticsCollection = analyticsCollection;
+    }
+
+    @JsonProperty
+    public String getConsumerKey() {
+        return consumerKey;
+    }
+
+    @JsonProperty
+    public void setConsumerKey(String consumerKey) {
+        this.consumerKey = consumerKey;
+    }
+
+    @JsonProperty
+    public String getConsumerSecret() {
+        return consumerSecret;
+    }
+
+    @JsonProperty
+    public void setConsumerSecret(String consumerSecret) {
+        this.consumerSecret = consumerSecret;
+    }
+
+    @JsonProperty
+    public String getAccessKey() {
+        return accessKey;
+    }
+
+    @JsonProperty
+    public void setAccessKey(String accessKey) {
+        this.accessKey = accessKey;
+    }
+
+    @JsonProperty
+    public String getAccessSecret() {
+        return accessSecret;
+    }
+
+    @JsonProperty
+    public void setAccessSecret(String accessSecret) {
+        this.accessSecret = accessSecret;
     }
 }

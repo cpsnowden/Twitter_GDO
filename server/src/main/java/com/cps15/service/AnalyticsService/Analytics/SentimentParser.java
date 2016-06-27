@@ -26,9 +26,9 @@ public class SentimentParser {
             cls = (LMClassifier) AbstractExternalizable.readObject(file);
             String[] categories = cls.categories();
 
-            for(int i = 0; i < categories.length; ++i) {
-                System.out.println(categories[i]);
-            }
+//            for(int i = 0; i < categories.length; ++i) {
+//                System.out.println(categories[i]);
+//            }
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
             return;

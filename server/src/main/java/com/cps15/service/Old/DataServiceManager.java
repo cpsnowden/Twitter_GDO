@@ -1,8 +1,8 @@
 //package com.cps15.service.DataService;
 //
-//import com.cps15.api.data.DataFilter;
+//import com.cps15.api.data.DatasetInfo;
 //import com.cps15.api.data.Status;
-//import com.cps15.api.persistence.DataFilterDAO;
+//import com.cps15.api.persistence.DatasetInfoDAO;
 //
 //import java.util.HashMap;
 //import java.util.Map;
@@ -22,12 +22,12 @@
 //
 //    private final Map<String, Thread> workers = new HashMap<>();
 //    private final Map<String, TwitterStreamCollector> tasks = new HashMap<>();
-//    private DataFilterDAO dataFilterDAO;
-//    public DataServiceManager(DataFilterDAO dataFilterDAO) {
+//    private DatasetInfoDAO dataFilterDAO;
+//    public DataServiceManager(DatasetInfoDAO dataFilterDAO) {
 //        this.dataFilterDAO = dataFilterDAO;
 //    }
 //
-//    public boolean addDataStream(DataFilter dataFilter) {
+//    public boolean addDataStream(DatasetInfo dataFilter) {
 //
 //        TwitterStreamCollector tsc = new TwitterStreamCollector(auth, dataFilter, dataFilterDAO);
 //        Thread worker = new Thread(tsc);
@@ -43,7 +43,7 @@
 //        return true;
 //    }
 //
-//    public boolean stopDataService(DataFilter dataFilter) {
+//    public boolean stopDataService(DatasetInfo dataFilter) {
 //
 //        String id = dataFilter.getId();
 //
@@ -63,7 +63,7 @@
 //        return false;
 //    }
 //
-//    public boolean attemptRestartDataService(DataFilter dataFilter, boolean force) {
+//    public boolean attemptRestartDataService(DatasetInfo dataFilter, boolean force) {
 //
 //        String id = dataFilter.getId();
 //

@@ -20,16 +20,37 @@
         </init-param>
         <init-param>
             <param-name>Prefix</param-name>
-            <param-value>/api</param-value>
+            <param-value>/API</param-value>
         </init-param>
         <load-on-startup>1</load-on-startup>
-        <!--<async-supported>true</async-supported>-->
+        <async-supported>true</async-supported>
     </servlet>
 
     <!--&lt;!&ndash; Make the proxy handle requests to /api/* &ndash;&gt;-->
     <servlet-mapping>
         <servlet-name>proxy</servlet-name>
-        <url-pattern>/api/*</url-pattern>
+        <url-pattern>/API/*</url-pattern>
     </servlet-mapping>
+
+    <!--<login-config>-->
+        <!--<auth-method>BASIC</auth-method>-->
+        <!--<realm-name>JCGRealm</realm-name>-->
+    <!--</login-config>-->
+
+    <!--<security-constraint>-->
+        <!--<display-name>authorization</display-name>-->
+        <!--<web-resource-collection>-->
+            <!--<web-resource-name>Secure resources</web-resource-name>-->
+            <!--<url-pattern>/partials/DataFilters</url-pattern>-->
+        <!--</web-resource-collection>-->
+        <!--<auth-constraint>-->
+            <!--<role-name>ADMIN</role-name>-->
+        <!--</auth-constraint>-->
+    <!--</security-constraint>-->
+
+    <!--<security-role>-->
+        <!--<role-name>ADMIN</role-name>-->
+        <!--<role-name>administator access</role-name>-->
+    <!--</security-role>-->
 
 </web-app>

@@ -1,7 +1,6 @@
-package com.cps15.service.DataService.StreamStopper;
+package com.cps15.service.DataService.TwitterStreams.StreamStopper;
 
 import java.security.InvalidParameterException;
-import java.time.Duration;
 
 /**
  * Twitter_GDO

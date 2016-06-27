@@ -41,5 +41,9 @@ public class DatabaseManager {
         return db;
     }
 
+    public DB getAltDb(String dbName) {
+        return mongoClient.getDB(dbName);
+    }
+
 
 }

@@ -1,12 +1,29 @@
 package com.cps15.service.Database;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
+import com.mongodb.QueryBuilder;
+import com.mongodb.util.JSON;
+import org.bson.Document;
+import org.mongojack.DBCursor;
 import org.mongojack.DBProjection;
 import org.mongojack.DBQuery;
 import org.mongojack.JacksonDBCollection;
+import org.mongojack.internal.MongoJackModule;
 import twitter4j.Status;
+import twitter4j.TwitterException;
+import twitter4j.TwitterObjectFactory;
+import twitter4j.User;
+import twitter4j.json.DataObjectFactory;
 
+import javax.annotation.Nullable;
 import java.util.List;
+import java.util.concurrent.SynchronousQueue;
 import java.util.logging.Logger;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -21,27 +38,56 @@ import java.util.stream.StreamSupport;
 public class StatusDAO{
 
     private static final Logger logger = Logger.getLogger(StatusDAO.class.getName());
-    private JacksonDBCollection<Status, String> collection;
 
+    private DBCollection dbc;
     public StatusDAO(DBCollection dbCollection) {
-        collection = JacksonDBCollection.wrap(dbCollection, Status.class, String.class);
+
+        dbc = dbCollection;
+
     }
 
     public void insert(Status status) {
-        collection.insert(status);
+
+        try {
+            String json = TwitterObjectFactory.getRawJSON(status);
+            dbc.insert((DBObject) JSON.parse(json));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
-    public JacksonDBCollection<Status, String> getCollection() {
-        return collection;
+    public DBCollection getCollection() {
+        return dbc;
     }
 
-    public Stream<Status> getStream(DBQuery.Query query, DBProjection.ProjectionBuilder projection, int maxNumber){
-        logger.info("Getting stream " + query.toString() + " " + projection.toString());
-        return StreamSupport.stream(collection.find(query,projection).limit(maxNumber).spliterator(),false);
+    public Stream<Status> getStream(DBObject query, int maxNumber){
+
+        logger.info("Getting stream " + query.toString());
+
+        Stream<Status> s = StreamSupport.stream(dbc.find(query).limit(maxNumber).spliterator(),false).map(f -> {
+            try {
+                return TwitterObjectFactory.createStatus(f.toString());
+            } catch (TwitterException e) {
+                e.printStackTrace();
+            }
+            return null;
+        });
+
+//        s.forEach(status -> {
+//            System.out.println(status.getText());
+//            System.out.println(status.getRetweetedStatus().getUser().getScreenName());
+//        });
+//        System.exit(0);
+        return s;
 
     }
+
+
+
+
 
 
 
 
 }
+

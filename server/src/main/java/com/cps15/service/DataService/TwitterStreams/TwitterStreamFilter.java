@@ -1,10 +1,10 @@
-package com.cps15.service.DataService;
+package com.cps15.service.DataService.TwitterStreams;
 
-import com.cps15.api.data.DataFilter;
-import com.cps15.service.DataService.Filters.HashtagFilter;
-import com.cps15.service.DataService.Filters.IStatusFilter;
-import com.cps15.service.DataService.StreamStopper.IStreamStopper;
-import com.cps15.service.DataService.StreamStopper.StreamStopperFactory;
+import com.cps15.api.data.DatasetInfo;
+import com.cps15.service.DataService.TwitterStreams.Filters.HashtagFilter;
+import com.cps15.service.DataService.TwitterStreams.Filters.IStatusFilter;
+import com.cps15.service.DataService.TwitterStreams.StreamStopper.IStreamStopper;
+import com.cps15.service.DataService.TwitterStreams.StreamStopper.StreamStopperFactory;
 import com.cps15.service.Database.StatusDAO;
 import com.mongodb.DBCollection;
 import twitter4j.StallWarning;
@@ -13,7 +13,6 @@ import twitter4j.StatusDeletionNotice;
 import twitter4j.StatusListener;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.logging.Logger;
 
 /**
@@ -28,18 +27,18 @@ public class TwitterStreamFilter implements Runnable {
     private IStreamStopper streamStopper;
     private final Object lock = new Object();
     private StatusDAO statusDAO;
-    private DataFilter dataFilter;
+    private DatasetInfo datasetInfo;
     private IFilterManageMethods manageMethods;
 
-    public TwitterStreamFilter(DataFilter dataFilter, DBCollection collection, IFilterManageMethods manageMethods) {
+    public TwitterStreamFilter(DatasetInfo datasetInfo, DBCollection collection, IFilterManageMethods manageMethods) {
 
         this.manageMethods = manageMethods;
-        this.dataFilter = dataFilter;
-        this.statusFilter = new HashtagFilter(dataFilter.getTags());
+        this.datasetInfo = datasetInfo;
+        this.statusFilter = new HashtagFilter(datasetInfo.getTags());
         this.streamingTerms = statusFilter.getStreamingTermList();
         this.streamStopper = new StreamStopperFactory()
-                .setStopperType(dataFilter.getLimitType())
-                .setLimit(dataFilter.getLimit())
+                .setStopperType(datasetInfo.getLimitType())
+                .setLimit(datasetInfo.getLimit())
                 .build();
         this.statusDAO = new StatusDAO(collection);
 
@@ -49,11 +48,11 @@ public class TwitterStreamFilter implements Runnable {
             public void onStatus(Status status) {
 
                 if(statusFilter.consumeStatus(status)) {
-                    logger.info(dataFilter.getDescription() + " " + status.getText());
+                    logger.info(datasetInfo.getDescription() + " " + status.getText());
                     statusDAO.insert(status);
 
                     if(streamStopper.stop()) {
-                        dataFilter.finished();
+                        datasetInfo.finished();
                         synchronized (lock) {
                             lock.notify();
                         }
@@ -85,7 +84,7 @@ public class TwitterStreamFilter implements Runnable {
             @Override
             public void onException(Exception e) {
 
-                dataFilter.error();
+                datasetInfo.error();
                 synchronized (lock){
                     lock.notify();
                 }
@@ -104,8 +103,8 @@ public class TwitterStreamFilter implements Runnable {
         return statusListener;
     }
 
-    public DataFilter getDataFilter() {
-        return dataFilter;
+    public DatasetInfo getDatasetInfo() {
+        return datasetInfo;
     }
 
     public void finish() {
@@ -127,7 +126,11 @@ public class TwitterStreamFilter implements Runnable {
             }
         }
 
-        manageMethods.handleStatus(this, this.dataFilter.getStatus());
+        manageMethods.handleStatus(this, this.datasetInfo.getStatus());
 
+    }
+
+    public StatusDAO getStatusDAO() {
+        return statusDAO;
     }
 }

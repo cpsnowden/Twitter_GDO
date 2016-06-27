@@ -1,10 +1,8 @@
 package com.cps15.api.data;
 
-import com.cps15.service.DataService.StreamStopper.IStreamStopper;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import gnu.trove.TObjectIdentityHashingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.hibernate.validator.constraints.NotEmpty;
-import org.joda.time.Duration;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -13,32 +11,39 @@ import java.util.List;
  * Twitter_GDO
  * Created by chris on 19/06/2016.
  */
-public class DataStreamRequest implements IDataCollectionRequest {
+public class DatasetRequest {
 
-    @NotEmpty
+    @JsonProperty("type")
+    @JsonDeserialize(using = DatasetTypeDeserializer.class)
+    private DatasetType type;
+
+    @JsonProperty
     private String description;
-    @NotEmpty
+
+    @JsonProperty
     private String limitType;
-    @NotNull
+
+    @JsonProperty
     private Long limit;
 
     private List<String> tags;
 
-    public DataStreamRequest() {}
+    public DatasetRequest() {
+    }
 
-    public DataStreamRequest(String description, String limitType, Long limit, List<String> tags) {
+    public DatasetRequest(DatasetType type, String description, String limitType, Long limit, List<String> tags) {
+        this.type = type;
         this.description = description;
         this.limitType = limitType;
         this.limit = limit;
         this.tags = tags;
     }
 
-    @JsonProperty
+
     public String getDescription() {
         return description;
     }
 
-    @JsonProperty
     public void setDescription(String description) {
         this.description = description;
     }
@@ -53,23 +58,27 @@ public class DataStreamRequest implements IDataCollectionRequest {
         this.tags = tags;
     }
 
-    @JsonProperty
     public String getLimitType() {
         return limitType;
     }
 
-    @JsonProperty
     public void setLimitType(String limitType) {
         this.limitType = limitType;
     }
 
-    @JsonProperty
     public long getLimit() {
         return limit;
     }
 
-    @JsonProperty
     public void setLimit(Long limit) {
         this.limit = limit;
+    }
+
+    public DatasetType getType() {
+        return type;
+    }
+
+    public void setType(DatasetType type) {
+        this.type = type;
     }
 }

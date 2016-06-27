@@ -1,4 +1,4 @@
-package com.cps15.service.DataService.Filters;
+package com.cps15.service.DataService.TwitterStreams.Filters;
 
 
 import twitter4j.Status;

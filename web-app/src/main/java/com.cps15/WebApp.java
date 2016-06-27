@@ -1,5 +1,6 @@
 package com.cps15;
 
+import org.eclipse.jetty.security.HashLoginService;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.webapp.WebAppContext;
 
@@ -21,6 +22,14 @@ public class WebApp{
         webapp.setContextPath("/");
         webapp.setDescriptor(webappDirLocation + "/WEB-INF/web.xml");
         webapp.setResourceBase(webappDirLocation);
+
+//        HashLoginService loginService = new HashLoginService("JCGRealm");
+//
+//        loginService.setConfig("realm.properties");
+//        System.out.println("I am here");
+//        System.out.printf(loginService.getConfig());
+//        System.out.printf(loginService.getUsers().values().toString());
+//        server.addBean(loginService);
 
         server.setHandler(webapp);
         server.start();

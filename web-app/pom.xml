@@ -87,6 +87,15 @@
           <version>9.2.11.v20150529</version>
           <configuration>
             <scanIntervalSeconds>10</scanIntervalSeconds>
+            <webAppConfig>
+              <contextPath>/</contextPath>
+            </webAppConfig>
+            <!--<loginServices>-->
+              <!--<loginService implementation="org.eclipse.jetty.security.HashLoginService">-->
+                <!--<name>JCGRealm</name>-->
+                <!--<config>${project.basedir}/realm.properties</config>-->
+              <!--</loginService>-->
+            <!--</loginServices>-->
           </configuration>
 
       </plugin>

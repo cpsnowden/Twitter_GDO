@@ -1,10 +1,10 @@
 //package com.cps15.service.DataService;
 //
 //
-//import com.cps15.api.data.DataFilter;
-//import com.cps15.api.persistence.DataFilterDAO;
-//import com.cps15.service.DataService.StreamStopper.IStreamStopper;
-//import com.cps15.service.DataService.StreamStopper.StreamStopperFactory;
+//import com.cps15.api.data.DatasetInfo;
+//import com.cps15.api.persistence.DatasetInfoDAO;
+//import com.cps15.service.DataService.TwitterStreams.StreamStopper.IStreamStopper;
+//import com.cps15.service.DataService.TwitterStreams.StreamStopper.StreamStopperFactory;
 //import com.cps15.service.Database.StatusDAO;
 //import twitter4j.*;
 //
@@ -23,7 +23,7 @@
 //    private IStreamStopper streamStopper;
 //    private StatusDAO statusDAO;
 //
-//    public TwitterStreamCollector(String[] auth, DataFilter dataFilter, DataFilterDAO dataFilterDAO){
+//    public TwitterStreamCollector(String[] auth, DatasetInfo dataFilter, DatasetInfoDAO dataFilterDAO){
 //        super(auth, dataFilter, dataFilterDAO);
 //
 //        this.streamStopper = new StreamStopperFactory()

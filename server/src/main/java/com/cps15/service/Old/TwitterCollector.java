@@ -1,8 +1,8 @@
 //package com.cps15.service.DataService;
 //
-//import com.cps15.api.data.DataFilter;
+//import com.cps15.api.data.DatasetInfo;
 //import com.cps15.api.data.Status;
-//import com.cps15.api.persistence.DataFilterDAO;
+//import com.cps15.api.persistence.DatasetInfoDAO;
 //import com.cps15.service.Database.DatabaseManager;
 //import org.joda.time.DateTime;
 //import twitter4j.conf.ConfigurationBuilder;
@@ -22,13 +22,13 @@
 //    private String AccessToken;
 //    private String AccessTokenSecret;
 //
-//    private DataFilterDAO dataFilterDAO;
+//    private DatasetInfoDAO dataFilterDAO;
 //
-//    protected DataFilter dataFilter;
+//    protected DatasetInfo dataFilter;
 //    protected boolean requestStop;
 //    protected DatabaseManager dbm;
 //
-//    public TwitterCollector(String[] auth, DataFilter dataFilter, DataFilterDAO dataFilterDAO) {
+//    public TwitterCollector(String[] auth, DatasetInfo dataFilter, DatasetInfoDAO dataFilterDAO) {
 //
 //        this.ConsumerKey = auth[0];
 //        this.ConsumerSecret = auth[1];

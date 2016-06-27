@@ -1,11 +1,7 @@
-package com.cps15.service.DataService.StreamStopper;
+package com.cps15.service.DataService.TwitterStreams.StreamStopper;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.joda.time.DateTime;
 
-import java.time.Duration;
-import java.time.Instant;
 import java.util.logging.Logger;
 
 /**

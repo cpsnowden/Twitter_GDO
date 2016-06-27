@@ -17,22 +17,13 @@ import java.util.logging.Logger;
 public class GraphLayout {
 
     private static final Logger logger = Logger.getLogger(GraphLayout.class.getName());
-    private GraphModel graphModel;
 
     public enum LayoutAlgorithm {
         FORCEATLAS2,
         YIFANHU
     }
 
-    public GraphLayout(GraphModel graphModel) {
-
-        this.graphModel = graphModel;
-    }
-
-
-
-
-    public boolean runLayout(long duration, LayoutAlgorithm layoutAlgorithm) {
+    public static boolean runLayout(GraphModel graphModel, long duration, LayoutAlgorithm layoutAlgorithm) {
 
 
         logger.info("Starting Layout");
@@ -53,7 +44,7 @@ public class GraphLayout {
         return true;
     }
 
-    private Layout getLayout(LayoutAlgorithm layoutAlgorithm) {
+    private static Layout getLayout(LayoutAlgorithm layoutAlgorithm) {
         switch (layoutAlgorithm) {
             case FORCEATLAS2:
                 ForceAtlas2 forceAtlas2 = new ForceAtlas2(null);

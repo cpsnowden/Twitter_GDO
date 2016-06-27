@@ -4,6 +4,12 @@ mongoport: 27017
 mongodb: Administration
 requestCollection: Requests
 streamCollection: Streams
+analyticsCollection: Analytics
+
+consumerKey : uxMqOuKT66k0ihHJ9aQRoCq2x
+consumerSecret : zyc5BC1voOMPmJs3G7o1hHv4jI8ii6WGctf4yzdg43xQzxPH0U
+accessKey : 529742116-XJ1FPnd2ANhx8UDsv3espl1OAlufhzQT5G6yQDxA
+accessSecret : sHoqlokqwo0OPz2RRBjxBL3E8CKszf9dibi8ao4xLykMS
 
 # Change default server ports
 server:

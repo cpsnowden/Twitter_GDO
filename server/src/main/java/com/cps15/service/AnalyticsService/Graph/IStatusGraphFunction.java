@@ -1,6 +1,6 @@
 package com.cps15.service.AnalyticsService.Graph;
 
-import org.bson.Document;
+import com.mongodb.DBObject;
 import twitter4j.Status;
 
 import java.util.List;
@@ -14,6 +14,6 @@ public interface IStatusGraphFunction {
 
     GraphCreator getGraphCreator(Stream<Status> documentStream);
     List<String> getKeys();
-
+    DBObject getQuery();
 
 }

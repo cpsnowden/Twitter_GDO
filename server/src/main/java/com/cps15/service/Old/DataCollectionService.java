@@ -1,7 +1,7 @@
 //package com.cps15.service;
 //
 //import com.codahale.metrics.annotation.Timed;
-//import com.cps15.service.DataService.StreamStopper.TimeDurationStopper;
+//import com.cps15.service.DataService.TwitterStreams.StreamStopper.TimeDurationStopper;
 //import com.cps15.service.DataService.TwitterStreamCollector;
 //
 //import javax.ws.rs.*;
