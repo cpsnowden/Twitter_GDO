@@ -4,7 +4,7 @@
 
         <div class="row">
             <div class="panel panel-primary">
-                <div class="panel-heading clearfix" >
+                <div class="panel-heading clearfix">
                     <h3 class="panel-title pull-left" style="padding-top: 7.5px;">Datasets</h3>
                     <div class="pull-right">
                         <input class="form-control" type="text" ng-model="searchText.$" placeholder="Filter the list..">
@@ -13,15 +13,15 @@
 
                 <div class="control-group">
 
-                    <button ng-show="!dataFilterForm.show" class="span3 btn btn-primary"
+                    <button ng-show="!datasetForm.show" class="span3 btn btn-primary"
                             style="margin-left: 0; margin-right: 4px" type="button"
-                            ng-click="togglePersonForm()">
+                            ng-click="toggleDatasetForm()">
                         <i class="glyphicon glyphicon-cloud-download"></i>
                         Create
                     </button>
-                    <button ng-show="dataFilterForm.show" class="span3 btn btn-info"
+                    <button ng-show="datasetForm.show" class="span3 btn btn-info"
                             style="margin-left: 0; margin-right: 4px" type="button"
-                            ng-click="togglePersonForm()">
+                            ng-click="toggleDatasetForm()">
                         Hide
                     </button>
                     <button class="span3 btn btn-info"
@@ -32,15 +32,15 @@
                     </button>
                 </div>
 
-                <div ng-show="dataFilterForm.show">
+                <div ng-show="datasetForm.show">
                     <div class="panel panel-primary">
                         <div class="panel-heading">DataFilter Creation</div>
                         <div class="panel-body">
-                            <form ng-submit="savePerson(dataFilterForm.person); dataFilterForm.show=false">
+                            <form ng-submit="addDataset(datasetForm.dataset); datasetForm.show=false">
                                 <div class="form-group">
                                     <div class="input-group">
                                         <div class="input-group-addon">Dataset Type</div>
-                                        <select class="form-control" ng-model="dataFilterForm.person.type">
+                                        <select class="form-control" ng-model="datasetForm.dataset.type">
                                             <option>Twitter_Stream</option>
                                         </select>
                                     </div>
@@ -49,13 +49,13 @@
                                     <div class="input-group">
                                         <div class="input-group-addon">Description</div>
                                         <input type="text" class="form-control"
-                                               ng-model="dataFilterForm.person.description">
+                                               ng-model="datasetForm.dataset.description">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="input-group">
                                         <div class="input-group-addon">Duration</div>
-                                        <select class="form-control" ng-model="dataFilterForm.person.limitType">
+                                        <select class="form-control" ng-model="datasetForm.dataset.limitType">
                                             <option>Duration</option>
                                             <option>Counter</option>
                                         </select>
@@ -65,14 +65,14 @@
                                     <div class="input-group">
                                         <div class="input-group-addon">Duration Limit</div>
                                         <input type="number" class="form-control"
-                                               ng-model="dataFilterForm.person.limit">
+                                               ng-model="datasetForm.dataset.limit">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="input-group">
                                         <div class="input-group-addon">Tags</div>
                                         <input type="text" class="form-control" placeholder="#Brexit, #VoteRemain"
-                                               ng-model="dataFilterForm.person.tags">
+                                               ng-model="datasetForm.dataset.tags">
                                     </div>
 
                                 </div>
@@ -83,7 +83,7 @@
                         </div>
                     </div>
                 </div>
-                <!--<div class="table-responsive">-->
+
                 <table class="table table-striped table-bordered table-hover">
                     <col width="8%">
                     <col width="9%">
@@ -143,11 +143,12 @@
                     <tbody>
                     <tr ng-repeat="p in datasets | orderBy:'name' | filter:searchText | orderBy:sortType:sortReverse">
                         <td style="width: 200px">
-                            <button class="btn btn-success" ng-click="startStream(p)"><i
+                            <button class="btn btn-success" ng-click="startDataset(p)"><i
                                     class="glyphicon glyphicon-play"></i></button>
-                            <button class="btn btn-danger" ng-click="stopStream(p)"><i
+                            <button class="btn btn-danger" ng-click="stopDataset(p)"><i
                                     class="glyphicon glyphicon-stop"></i></button>
-                            <button class="btn btn-inverse" ng-click="deleteStream(p)" ng-show ="p['status']!='RUNNING'&&p['status']!='ORDERED'"><i
+                            <button class="btn btn-inverse" ng-click="deleteDataset(p)"
+                                    ng-show="p['status']!='RUNNING'&&p['status']!='ORDERED'"><i
                                     class="glyphicon glyphicon-trash"></i></button>
                         </td>
                         <td ng-bind="p['type']"></td>
@@ -161,7 +162,7 @@
                     </tr>
                     </tbody>
                 </table>
-            <!--</div>-->
+
             </div>
 
         </div>

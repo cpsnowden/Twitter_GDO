@@ -3,6 +3,7 @@ package com.cps15.service.AnalyticsService.Graph;
 import com.cps15.api.data.Analytics;
 import com.cps15.service.AnalyticsService.Analytics.SentimentParser;
 import com.cps15.service.Database.StatusDAO;
+import com.mongodb.DBObject;
 import org.gephi.filters.api.FilterController;
 import org.gephi.filters.api.Query;
 import org.gephi.filters.plugin.graph.GiantComponentBuilder;
@@ -38,14 +39,23 @@ public class GraphManager{
         this.sentimentParser = sentimentParser;
     }
 
+
     public File getRetweetGraph() {
 
         logger.info("Getting retweet graph for " + analytics.getDatasetId());
 
-        RetweetFunction retweetFunction = new RetweetFunction();
-
-        Stream<twitter4j.Status> statusStream = statusDAO.getStream(retweetFunction.getQuery(), analytics.getNodeLimit());
-        GraphModel graphModel = retweetFunction.getGraphCreator(statusStream).getGraphModel(workspace);
+        GraphModel graphModel;
+        if(!analytics.isOldDataFormat()) {
+            logger.info("Using new data format");
+            RetweetFunction retweetFunction = new RetweetFunction();
+            Stream<twitter4j.Status> statusStream = statusDAO.getStream(retweetFunction.getQuery(), analytics.getNodeLimit());
+            graphModel = retweetFunction.getGraphCreator(statusStream).getGraphModel(workspace);
+        } else {
+            logger.info("Using old data format");
+            AltRetweetFunction altRetweetFunction = new AltRetweetFunction();
+            Stream<DBObject> statusStream = statusDAO.getDBObjectStream(altRetweetFunction.getQuery(), analytics.getNodeLimit());
+            graphModel = altRetweetFunction.getGraphCreator(statusStream).getGraphModel(workspace);
+        }
 
         logger.info("Constructed retweet graph for " + analytics.getDatasetId());
 

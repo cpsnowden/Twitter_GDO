@@ -60,6 +60,13 @@ public class StatusDAO{
         return dbc;
     }
 
+
+    public Stream<DBObject> getDBObjectStream(DBObject query, int maxNumber) {
+
+        return StreamSupport.stream(dbc.find(query).limit(maxNumber).spliterator(),false);
+
+    }
+
     public Stream<Status> getStream(DBObject query, int maxNumber){
 
         logger.info("Getting stream " + query.toString());
@@ -73,11 +80,6 @@ public class StatusDAO{
             return null;
         });
 
-//        s.forEach(status -> {
-//            System.out.println(status.getText());
-//            System.out.println(status.getRetweetedStatus().getUser().getScreenName());
-//        });
-//        System.exit(0);
         return s;
 
     }

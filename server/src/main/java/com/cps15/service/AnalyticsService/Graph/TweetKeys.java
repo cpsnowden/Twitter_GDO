@@ -1,5 +1,6 @@
 package com.cps15.service.AnalyticsService.Graph;
 
+import com.mongodb.DBObject;
 import org.bson.Document;
 
 import java.util.Arrays;
@@ -38,18 +39,18 @@ public class TweetKeys {
                 edgeLabel).stream().filter(p->p != null).collect(Collectors.toList());
     };
 
-    private static String getValue(String key, Document document) {
+    private static String getValue(String key, DBObject document) {
 
         String[] subKeys = key.split("[.]");
         Object value = document.get(subKeys[0]);
         for (int i = 1; i < subKeys.length; i++) {
-            value = ((Document) value).get(subKeys[i]);
+            value = ((DBObject) value).get(subKeys[i]);
         }
         return value.toString();
 
     }
 
-    public TweetKeys getValues(Document document) {
+    public TweetKeys getValues(DBObject document) {
 
         return new TweetKeys(getValue(sourceKey,document),
                 getValue(targetKey,document),

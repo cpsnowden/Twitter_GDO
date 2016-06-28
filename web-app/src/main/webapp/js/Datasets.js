@@ -1,87 +1,85 @@
-/**
- * Author: Per Spilling, per@kodemaker.no
- */
+var myApp = angular.module('dataFilter', ['restangular', 'ngResource', 'ui.bootstrap', 'ngRoute'])
 
+    .config(function ($httpProvider, RestangularProvider) {
 
-var myApp = angular.module('dataFilter', ['ngResource', 'ui.bootstrap','ngRoute']).config(function($httpProvider) {
         $httpProvider.defaults.headers.common['Authorization'] = "Basic Y3BzMTVfYWRtaW46c2VjcmV0";
-}).controller('DataFilterCtrl',function($scope, DataFilterResource, DataFiltersResource, DataFilterStatusResource, $window, $q, $interval) {
+        RestangularProvider.setBaseUrl('/API');
+        RestangularProvider.setDefaultHeaders({Authorization: "Basic Y3BzMTVfYWRtaW46c2VjcmV0"});
 
-    $scope.sortType = 'endDate';
-    $scope.sortReverse = false;
+    })
 
-    $scope.dataFilterForm = {
-        show: false,
-        person: {}
-    };
+    .controller('DataFilterCtrl', function ($scope, $window, $q, $interval, Restangular) {
 
-    $scope.datasets = DataFiltersResource.query();
+        $scope.datasets = Restangular.all('dataset').getList().$object
 
-    $scope.togglePersonForm = function () {
-        $scope.dataFilterForm.show = !$scope.dataFilterForm.show;
-    };
+        $scope.sortType = 'endDate';
+        $scope.sortReverse = false;
 
-    $scope.refreshTable = function() {
-        $scope.datasets = DataFiltersResource.query();
-    };
+        $scope.datasetForm = {
+            show: false,
+            dataset: {}
+        };
 
-    $interval($scope.refreshTable, 10000);
+        $scope.toggleDatasetForm = function () {
+            $scope.datasetForm.show = !$scope.datasetForm.show;
+        };
 
-    $scope.clearForm = function () {
-        $scope.dataFilterForm.person = {}
-    };
+        $scope.clearForm = function () {
+            $scope.datasetForm.dataset = {}
+        };
 
-    $scope.savePerson = function (person) {
-        if (person != undefined) {
-            person.tags = person.tags.split(/[ ,]+/);
-            console.log(person.tags);
-            DataFilterResource.save(person).$promise.then(function() {
-                $scope.datasets = DataFiltersResource.query();
-                $scope.dataFilterForm.person = {};  // clear the form
-            });
-        }
-    };
 
-    $scope.startStream = function (p) {
-        DataFilterStatusResource.update({id: p.id}, {'status':'ORDERED'}).$promise.then(function() {
-            $scope.datasets = DataFiltersResource.query();
-        })
-    };
+        $scope.refreshTable = function () {
+            $scope.datasets = Restangular.all('dataset').getList().$object
+        };
 
-    $scope.deleteStream = function(person) {
-        var msgBox = $window.confirm("Are your sure");
+        $interval($scope.refreshTable, 10000);
 
-            if (msgBox) {
-                // remove from the server and reload the person list from the server after the delete
-                DataFilterResource.delete({id: person.id}).$promise.then(function() {
-                    $scope.datasets = DataFiltersResource.query();
-                })
+        $scope.addDataset = function (dataset) {
+
+            if (dataset != undefined) {
+                dataset.tags = dataset.tags.split(/[ ,]+/);
+
+                console.log(dataset);
+
+                Restangular.all('dataset').post(dataset).then(function(){
+                    console.log("Dataset requested");
+                }, function() {
+                    console.log("Error requesting dataset");
+                });
             }
 
+        };
+
+        $scope.startDataset = function (dataset) {
+
+            Restangular.one("dataset",dataset.id).customPUT({'status': 'ORDERED'},"status").then(function(){
+                console.log("Dataset request start");
+            }, function() {
+                console.log("Error requesting dataset start");
+            });
+
+            $scope.refreshTable();
+
+        };
+
+        $scope.deleteDataset = function (dataset) {
+
+            Restangular.one("dataset", dataset.id).remove().then(function(){
+                $scope.refreshTable();
+            })
+        };
+
+        $scope.stopDataset = function (dataset) {
 
 
-    };
+            Restangular.one("dataset",dataset.id).customPUT({'status': 'STOPPED'},"status").then(function(){
+                console.log("Dataset request stop");
+            }, function() {
+                console.log("Error requesting dataset stop");
+            });
 
-    $scope.stopStream = function (p) {
-        DataFilterStatusResource.update({id: p.id}, {'status':'STOPPED'}).$promise.then(function () {
-            $scope.datasets = DataFiltersResource.query();
-        })
-    }
+            $scope.refreshTable();
+        }
 
-});
-
-
-myApp.factory('DataFiltersResource', function ($resource) {
-
-    return $resource('/API/dataset', {}, {});
-});
-
-myApp.factory('DataFilterResource', function ($resource) {
-    return $resource('/API/dataset/:id', {}, {});
-});
-
-myApp.factory('DataFilterStatusResource', function ($resource) {
-    return $resource('/API/dataset/:id/status', {}, {
-        'update':{method:'PUT'}
     });
-});
