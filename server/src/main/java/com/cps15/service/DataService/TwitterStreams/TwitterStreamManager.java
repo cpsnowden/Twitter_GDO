@@ -67,7 +67,9 @@ public class TwitterStreamManager implements IFilterManageMethods, IDataCollecto
 
             if (null == twitterStreamFilter) {
                 logger.warning("Warning " + datasetInfo.getId() + " is not actually running, forcing to STOP");
+                datasetInfo.setFilterSize(dbm.getDb().getCollection(datasetInfo.getId()).count());
                 datasetInfoDAO.update(datasetInfo.finished());
+
                 return false;
             }
 
