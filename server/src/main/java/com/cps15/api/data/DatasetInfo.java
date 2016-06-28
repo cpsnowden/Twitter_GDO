@@ -84,6 +84,7 @@ public class DatasetInfo extends DatasetRequest{
                 ", status=" + status +
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
+                ", filterSize=" + filterSize +
                 '}';
     }
 

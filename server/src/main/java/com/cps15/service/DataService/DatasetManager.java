@@ -93,20 +93,28 @@ public class DatasetManager {
     public boolean toggleStatus(String id, Status status){
 
         DatasetInfo datasetInfo = datasetInfoDAO.findByID(id);
+
+        logger.info("Attempting to toggle " + datasetInfo.toString());
+
         System.out.println(datasetInfo.getType());
         if(null == datasetInfo) {
+            logger.warning("Could not find status with this id " + id);
             return false;
         }
 
         switch (datasetInfo.getType()) {
             case TWITTER_STREAM:
                 if(status.getStatus() == Status.STATUS.STOPPED) {
+                    logger.info("Attempting to stop " + id);
                     return twitterStreamManager.stop(datasetInfo);
                 } else if(status.getStatus() == Status.STATUS.ORDERED) {
+                    logger.info("Attempting to order " + id);
                     return twitterStreamManager.restart(datasetInfo);
                 }
             break;
             default:
+                logger.warning("Wrong type of dataset type");
+
         }
 
         return false;
@@ -122,6 +130,7 @@ public class DatasetManager {
         }
 
     }
+
 
 
 }
