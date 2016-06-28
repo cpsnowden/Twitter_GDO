@@ -67,8 +67,9 @@ public class GraphManager{
 
         GraphLayout.runLayout(graphModel, analytics.getLayoutTime(), GraphLayout.LayoutAlgorithm.FORCEATLAS2);
 
+        logger.info("Running sentiment analysis");
         sentimentAnalysis(graphModel);
-
+        logger.info("Ran sentiment analysis");
         return exportTo(GraphFormat.GRAPHML, analytics.getId());
     }
 
