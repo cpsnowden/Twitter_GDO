@@ -1,9 +1,6 @@
 package com.cps15.api.data;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.sun.tools.javac.util.List;
 
 import java.util.ArrayList;
 
