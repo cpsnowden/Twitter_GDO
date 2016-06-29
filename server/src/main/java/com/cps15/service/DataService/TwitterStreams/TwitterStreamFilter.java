@@ -48,7 +48,7 @@ public class TwitterStreamFilter implements Runnable {
             public void onStatus(Status status) {
 
                 if(statusFilter.consumeStatus(status)) {
-                    logger.fine(datasetInfo.getDescription() + " " + status.getText());
+                    logger.fine(datasetInfo.getDescription() + " " + status.getText().replace("\n",""));
                     statusDAO.insert(status);
 
                     if(streamStopper.stop()) {
@@ -84,7 +84,7 @@ public class TwitterStreamFilter implements Runnable {
             @Override
             public void onException(Exception e) {
 
-                logger.info(e.getStackTrace().toString());
+                logger.info(e.getMessage());
                 e.printStackTrace();
                 datasetInfo.error();
                 synchronized (lock){

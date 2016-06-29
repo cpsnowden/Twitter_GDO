@@ -94,13 +94,13 @@ public class DatasetManager {
 
         DatasetInfo datasetInfo = datasetInfoDAO.findByID(id);
 
-        logger.info("Attempting to toggle " + datasetInfo.toString());
-
-        System.out.println(datasetInfo.getType());
-        if(null == datasetInfo) {
+        if(datasetInfo == null) {
             logger.warning("Could not find status with this id " + id);
             return false;
         }
+
+        logger.warning("Attempting to toggle " + datasetInfo.toString());
+        logger.info("Attempting to toggle " + datasetInfo.toString());
 
         switch (datasetInfo.getType()) {
             case TWITTER_STREAM:
@@ -113,6 +113,7 @@ public class DatasetManager {
                 }
             break;
             default:
+                logger.info("Wrong type of dataset type");
                 logger.warning("Wrong type of dataset type");
 
         }

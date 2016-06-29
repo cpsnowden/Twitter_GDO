@@ -81,4 +81,15 @@ public class DatasetRequest {
     public void setType(DatasetType type) {
         this.type = type;
     }
+
+    @Override
+    public String toString() {
+        return "DatasetRequest{" +
+                "type=" + type +
+                ", description='" + description + '\'' +
+                ", limitType='" + limitType + '\'' +
+                ", limit=" + limit +
+                ", tags=" + tags +
+                '}';
+    }
 }

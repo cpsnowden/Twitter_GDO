@@ -29,6 +29,7 @@ logging:
   level: INFO
   loggers:
     com.cps15.service.DataService.TwitterStreamCollector: INFO
+
   appenders:
     - type: file
       currentLogFilename: log/application.log

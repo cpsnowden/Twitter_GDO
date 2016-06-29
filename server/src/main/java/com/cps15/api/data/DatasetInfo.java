@@ -80,6 +80,7 @@ public class DatasetInfo extends DatasetRequest{
     @Override
     public String toString() {
         return "DatasetInfo{" +
+                "request" + super.toString() +
                 "id='" + id + '\'' +
                 ", status=" + status +
                 ", startDate=" + startDate +
